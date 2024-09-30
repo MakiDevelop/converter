@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>繁體與簡體互換 - 0rz.tw工具箱</title>
+    <!-- 引入 Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <!-- 這裡是加載共用的 header -->
+    <div id="header"></div>
+
+    <!-- 廣告版位 -->
+    <div class="ad-space">
+        <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
+        <div id="pixad3292adx"></div>
+        <ins class="adsbygoogle"
+        style="display:inline-block;width:970px;height:250px"
+        data-ad-region="falcon"
+        data-ad-client="ca-pub-6865528665029394"
+        data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            jQuery.ajaxSetup({'cache': true});
+            jQuery.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
+            jQuery.ajaxSetup({'cache': false});
+        </script>
+    </div>
+
+    <!-- 主內容 -->
+    <div class="container mt-5">
+        <h2>繁中简中轉換</h2>
+        <form id="convert-form">
+            <textarea id="zh-input" class="form-control" placeholder="在此输入中文" rows="12"></textarea>
+            <div>
+                <input type="radio" id="s2t" name="convert-type" value="s2t" checked>
+                <label for="s2t">简体to繁體</label>
+                <input type="radio" id="t2s" name="convert-type" value="t2s">
+                <label for="t2s">繁體to简体</label>
+            </div>
+            <!-- 确保按钮的 type 为 button，防止表单提交 -->
+            <button id="convert-btn" type="button" class="btn btn-primary mt-3">轉換</button>
+        </form>
+
+        <h3 class="mt-5">轉換結果</h3>
+        <div id="output-text" class="border p-3 mt-3" style="min-height: 160px; background-color: #f5f5f5;"></div>
+        <button id="copy-btn" class="btn btn-primary" style="margin-top: 10px;">複製</button>
+    </div>
+
+    <!-- 廣告版位 -->
+    <div class="ad-space">
+        <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
+        <div id="pixad3292adx"></div>
+        <ins class="adsbygoogle"
+        style="display:inline-block;width:970px;height:250px"
+        data-ad-region="falcon"
+        data-ad-client="ca-pub-6865528665029394"
+        data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            jQuery.ajaxSetup({'cache': true});
+            jQuery.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
+            jQuery.ajaxSetup({'cache': false});
+        </script>
+    </div>
+
+    <!-- Modal: 通用提示框 -->
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">提示</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 這裡是加載共用的 footer -->
+    <div id="footer"></div>
+    <script>
+        // 動態加載 header 和 footer
+        document.getElementById('header').innerHTML = fetch('/static/html/header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('header').innerHTML = data);
+
+        document.getElementById('footer').innerHTML = fetch('/static/html/footer.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('footer').innerHTML = data);
+
+    </script>
+    <!-- 引入 Bootstrap 和自定義 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="static/js/zhconverter.js"></script>
+    <script src="static/js/app.js"></script>
+</body>
+</html>

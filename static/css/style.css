@@ -1,0 +1,72 @@
+#data-input {
+    flex-grow: 1;
+    min-height: 300px;  /* 确保有最小高度 */
+}
+
+#output {
+    min-height: 300px; /* 设置最小高度，确保至少显示300px的高度 */
+    overflow-y: auto;
+    background-color: #f5f5f5;
+    padding: 15px;
+    border: 1px solid #ccc;
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+textarea#ndjson-input {
+    min-height: 300px; /* 设置输入框的最小高度，确保至少显示300px的高度 */
+    resize: none; /* 禁用手动调整大小，避免破坏布局 */
+}
+
+.textarea-container, .output-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.parse-btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+.ad-space {
+    text-align: center;
+    margin-top: 20px;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    flex: 1;
+    margin-top: 50px;
+    padding-top: 70px;  /* 確保主內容不被固定的導航欄遮蓋 */
+    padding-bottom: 50px; /* 確保主內容不被固定的頁尾遮蓋 */
+}
+
+.row {
+    display: flex;
+    align-items: stretch; /* 保证所有子项等高 */
+}
+
+footer {
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+    margin-top: auto;
+    position: relative;
+    margin-top: 20px;
+}

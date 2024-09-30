@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+jinja2
+chardet
+charset-normalizer
+sqlalchemy
+python-multipart
+pydantic
+opencc-python-reimplemented

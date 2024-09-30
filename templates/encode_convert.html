@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>編碼轉換為UTF8 - Encode Convert to UTF-8 - 0rz.tw工具箱</title>
+    <!-- 引入 Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入自定義樣式 -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <!-- 這裡是加載共用的 header -->
+    <div id="header"></div>
+
+    <!-- 廣告版位 -->
+    <div class="ad-space">
+        <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
+        <div id="pixad3292adx"></div>
+        <ins class="adsbygoogle"
+        style="display:inline-block;width:970px;height:250px"
+        data-ad-region="falcon"
+        data-ad-client="ca-pub-6865528665029394"
+        data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            jQuery.ajaxSetup({'cache': true});
+            jQuery.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
+            jQuery.ajaxSetup({'cache': false});
+        </script>
+    </div>
+    
+    <!-- 主內容 -->
+    <div class="container">
+        <h3>上傳並轉換文件編碼</h3>
+        <h6>*目前僅支援txt, csv</h6>
+        <form id="upload-form">
+            <div class="form-group">
+                <label for="file-input">選擇文件</label>
+                <input type="file" id="file-input" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="encoding-select">目標編碼</label>
+                <select id="encoding-select" class="form-control">
+                    <option value="utf-8">UTF-8</option>
+                    <option value="big5">Big5</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">開始轉換</button>
+        </form>
+
+        <div id="result" style="margin-top: 20px;">
+            <p>原始編碼: <span id="original-encoding"></span></p>
+            <p>預覽內容: <pre id="preview-content"></pre></p>
+            <button id="download-btn" class="btn btn-success" style="display: none;">下載轉換後的文件</button>
+        </div>
+    </div>
+
+    <!-- 廣告版位 -->
+    <div class="ad-space">
+        <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
+        <div id="pixad3292adx"></div>
+        <ins class="adsbygoogle"
+        style="display:inline-block;width:970px;height:250px"
+        data-ad-region="falcon"
+        data-ad-client="ca-pub-6865528665029394"
+        data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            jQuery.ajaxSetup({'cache': true});
+            jQuery.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
+            jQuery.ajaxSetup({'cache': false});
+        </script>
+    </div>
+
+    <!-- Modal: 通用提示框 -->
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">提示</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 這裡是加載共用的 footer -->
+    <div id="footer"></div>
+
+    <!-- 引入 Bootstrap 的 JS 和 Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 動態加載 header 和 footer -->
+    <script>
+        document.getElementById('header').innerHTML = fetch('/static/html/header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('header').innerHTML = data);
+
+        document.getElementById('footer').innerHTML = fetch('/static/html/footer.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('footer').innerHTML = data);
+    </script>
+
+    <!-- 引入自定義 JS -->
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const fileInput = document.getElementById('file-input').files[0];
+            const targetEncoding = document.getElementById('encoding-select').value;
+
+            const formData = new FormData();
+            formData.append('file', fileInput);
+            formData.append('target_encoding', targetEncoding);
+
+            const response = await fetch('/upload_and_convert/', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                document.getElementById('original-encoding').textContent = result.original_encoding;
+                document.getElementById('preview-content').textContent = result.preview_content;
+
+                // 顯示下載按鈕
+                const downloadBtn = document.getElementById('download-btn');
+                downloadBtn.style.display = 'block';
+
+                // 設定下載連結
+                downloadBtn.addEventListener('click', function () {
+                    window.location.href = `/download/${result.converted_file}`;
+                });
+            } else {
+                alert(result.error || '發生錯誤，請重試。');
+            }
+        });
+    </script>
+    <script src="static/js/app.js"></script>
+</body>
+</html>

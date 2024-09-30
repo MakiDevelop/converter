@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圖片與Base64轉換 - Image & Base64 Converter - 0rz.tw工具箱</title>
+    <!-- 引入 Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入自定義樣式 -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <!-- 這裡是加載共用的 header -->
+    <div id="header"></div>
+
+    <!-- 廣告版位 -->
+    <div class="ad-space">
+        <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
+        <div id="pixad3292adx"></div>
+        <ins class="adsbygoogle"
+        style="display:inline-block;width:970px;height:250px"
+        data-ad-region="falcon"
+        data-ad-client="ca-pub-6865528665029394"
+        data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            jQuery.ajaxSetup({'cache': true});
+            jQuery.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
+            jQuery.ajaxSetup({'cache': false});
+        </script>
+    </div>
+    
+    <!-- 主內容 -->
+    <div class="container">
+        <div class="row">
+            <!-- 圖片轉Base64 -->
+            <div class="col-md-5 textarea-container">
+                <h3>圖片上傳轉換為Base64</h3>
+                <form id="image-upload-form" enctype="multipart/form-data">
+                    <input type="file" id="image-input" class="form-control" accept="image/*">
+                    <button type="button" id="convert-btn" class="btn btn-primary" style="margin-top: 10px;">轉換為Base64</button>
+                </form>
+                <textarea id="base64-output" class="form-control" placeholder="圖片轉換為Base64後會顯示在這裡" rows="6" readonly></textarea>
+            </div>
+
+            <!-- Base64轉圖片 -->
+            <div class="col-md-5 output-container">
+                <h3>Base64轉換為圖片</h3>
+                <textarea id="base64-input" class="form-control" placeholder="貼上Base64字串" rows="6"></textarea>
+                <button id="decode-btn" class="btn btn-primary" style="margin-top: 10px;">轉換為圖片</button>
+                <div id="image-output" style="margin-top: 10px;">
+                    <!-- 顯示解碼後的圖片 -->
+                </div>
+                <button id="download-btn" class="btn btn-secondary" style="display: none; margin-top: 10px;">下載圖片</button> <!-- 新增下載按鈕 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 廣告版位 -->
+    <div class="ad-space">
+        <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
+        <div id="pixad3292adx"></div>
+        <ins class="adsbygoogle"
+        style="display:inline-block;width:970px;height:250px"
+        data-ad-region="falcon"
+        data-ad-client="ca-pub-6865528665029394"
+        data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            jQuery.ajaxSetup({'cache': true});
+            jQuery.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
+            jQuery.ajaxSetup({'cache': false});
+        </script>
+    </div>
+
+    <!-- Modal: 通用提示框 -->
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">提示</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 這裡是加載共用的 footer -->
+    <div id="footer"></div>
+
+    <!-- 引入 Bootstrap 的 JS 和 Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 動態加載 header 和 footer
+        document.getElementById('header').innerHTML = fetch('/static/html/header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('header').innerHTML = data);
+
+        document.getElementById('footer').innerHTML = fetch('/static/html/footer.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('footer').innerHTML = data);
+
+        // 圖片轉換為Base64
+        document.getElementById('convert-btn').addEventListener('click', function () {
+            const imageInput = document.getElementById('image-input').files[0];
+            const base64Output = document.getElementById('base64-output');
+
+            if (!imageInput) {
+                alert('請選擇圖片文件！');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                base64Output.value = e.target.result;
+            };
+            reader.readAsDataURL(imageInput);
+        });
+
+        // Base64轉換為圖片
+        document.getElementById('decode-btn').addEventListener('click', function () {
+            const base64Input = document.getElementById('base64-input').value.trim();
+            const imageOutput = document.getElementById('image-output');
+            const downloadBtn = document.getElementById('download-btn');
+
+            if (!base64Input) {
+                alert('請貼入Base64字串！');
+                return;
+            }
+
+            const img = document.createElement('img');
+            img.src = base64Input;
+            img.alt = "轉換後的圖片";
+            img.style.maxWidth = '100%';
+
+            imageOutput.innerHTML = ''; // 清空之前的圖片
+            imageOutput.appendChild(img); // 顯示新的圖片
+
+            // 顯示下載按鈕
+            downloadBtn.style.display = 'block';
+
+            // 設置下載按鈕
+            downloadBtn.addEventListener('click', function () {
+                const a = document.createElement('a');
+                a.href = base64Input;
+                a.download = 'converted_image.png'; // 預設下載圖片名稱
+                a.click(); // 觸發下載
+            });
+        });
+    </script>
+    <script src="static/js/app.js"></script>
+</body>
+</html>
