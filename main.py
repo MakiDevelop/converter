@@ -55,10 +55,37 @@ async def show_encode_converter(request: Request):
 async def image_base64_converter(request: Request):
     return templates.TemplateResponse("imagebase64.html", {"request": request})
 
-# 顯示 zhconverter.html 頁面
 @app.get("/zhconverter", response_class=HTMLResponse)
 async def get_zhconverter(request: Request):
     return templates.TemplateResponse("zhconverter.html", {"request": request})
+
+@app.get("/bgremove", response_class=HTMLResponse)
+async def background_remove(request: Request):
+    return templates.TemplateResponse("background_remove.html", {"request": request})
+
+@app.get("/hashconvert", response_class=HTMLResponse)
+async def hash_convert(request: Request):
+    return templates.TemplateResponse("hash_converter.html", {"request": request})
+
+@app.get("/timeconvert", response_class=HTMLResponse)
+async def time_convert(request: Request):
+    return templates.TemplateResponse("time_convert.html", {"request": request})
+
+@app.get("/qrcodegen", response_class=HTMLResponse)
+async def qrcode_generate(request: Request):
+    return templates.TemplateResponse("qrcode_generate.html", {"request": request})
+
+@app.get("/stringtool", response_class=HTMLResponse)
+async def string_tool(request: Request):
+    return templates.TemplateResponse("string_convert.html", {"request": request})
+
+@app.get("/colorcode", response_class=HTMLResponse)
+async def color_code_tool(request: Request):
+    return templates.TemplateResponse("color_code.html", {"request": request})
+
+@app.get("/imgcompress", response_class=HTMLResponse)
+async def img_compress(request: Request):
+    return templates.TemplateResponse("image_compression.html", {"request": request})
 
 # 處理繁簡轉換的 POST 請求
 @app.post("/convert_zh")
@@ -116,13 +143,13 @@ async def upload_and_convert(file: UploadFile = File(...), target_encoding: str 
             "error": f"无法将文件转换为 {target_encoding}, 错误信息: {str(encode_error)}"
         }, status_code=500)
 
-@app.get("/download/{filename}")
-async def download_file(filename: str):
-    file_path = os.path.join(os.getcwd(), filename)
-    if os.path.exists(file_path):
-        headers = {"Content-Disposition": f"attachment; filename={filename}"}
-        return FileResponse(path=file_path, filename=filename, media_type='application/octet-stream', headers=headers)
-    return JSONResponse(content={"error": "File not found"}, status_code=404)
+# @app.get("/download/{filename}")
+# async def download_file(filename: str):
+#     file_path = os.path.join(os.getcwd(), filename)
+#     if os.path.exists(file_path):
+#         headers = {"Content-Disposition": f"attachment; filename={filename}"}
+#         return FileResponse(path=file_path, filename=filename, media_type='application/octet-stream', headers=headers)
+#     return JSONResponse(content={"error": "File not found"}, status_code=404)
 
 # 提供下載文件的路由
 @app.get("/download/{filename}")

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>字符串处理工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin: 20px;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        h2 {
+            color: #333;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>字符串处理工具</h1>
+
+        <!-- UTF-8 与 ASCII 转换 -->
+        <div class="section">
+            <h2>字符串编码转换 (UTF-8 与 ASCII)</h2>
+            <textarea id="encode-input" placeholder="输入字符串"></textarea>
+            <button onclick="convertToUTF8()">转换为 UTF-8</button>
+            <button onclick="convertToASCII()">转换为 ASCII</button>
+            <p>转换结果: <span id="encode-output"></span></p>
+        </div>
+
+        <!-- 大小写转换 -->
+        <div class="section">
+            <h2>大小写转换</h2>
+            <textarea id="case-input" placeholder="输入字符串"></textarea>
+            <button onclick="convertToUpperCase()">转换为大写</button>
+            <button onclick="convertToLowerCase()">转换为小写</button>
+            <p>转换结果: <span id="case-output"></span></p>
+        </div>
+
+        <!-- 字符串去重/去空格 -->
+        <div class="section">
+            <h2>去除重复字符与空格</h2>
+            <textarea id="trim-input" placeholder="输入字符串"></textarea>
+            <button onclick="removeDuplicates()">去除重复字符</button>
+            <button onclick="trimWhitespace()">去除前后空格</button>
+            <p>处理结果: <span id="trim-output"></span></p>
+        </div>
+
+        <!-- 正则表达式匹配与替换 -->
+        <div class="section">
+            <h2>正则表达式匹配与替换</h2>
+            <textarea id="regex-input" placeholder="输入要处理的字符串"></textarea>
+            <input type="text" id="regex-pattern" placeholder="正则表达式">
+            <input type="text" id="regex-replace" placeholder="替换为">
+            <button onclick="applyRegex()">应用正则替换</button>
+            <p>处理结果: <span id="regex-output"></span></p>
+        </div>
+
+        <!-- HTML 实体编码/解码 -->
+        <div class="section">
+            <h2>HTML 实体编码与解码</h2>
+            <textarea id="html-input" placeholder="输入包含 HTML 实体的字符串"></textarea>
+            <button onclick="encodeHtmlEntities()">实体编码</button>
+            <button onclick="decodeHtmlEntities()">实体解码</button>
+            <p>处理结果: <span id="html-output"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // UTF-8 与 ASCII 转换
+        function convertToUTF8() {
+            const input = document.getElementById('encode-input').value;
+            const utf8Encoded = new TextEncoder().encode(input);
+            document.getElementById('encode-output').innerText = utf8Encoded.join(' ');
+        }
+
+        function convertToASCII() {
+            const input = document.getElementById('encode-input').value;
+            const asciiEncoded = input.split('').map(char => char.charCodeAt(0)).join(' ');
+            document.getElementById('encode-output').innerText = asciiEncoded;
+        }
+
+        // 大小写转换
+        function convertToUpperCase() {
+            const input = document.getElementById('case-input').value;
+            document.getElementById('case-output').innerText = input.toUpperCase();
+        }
+
+        function convertToLowerCase() {
+            const input = document.getElementById('case-input').value;
+            document.getElementById('case-output').innerText = input.toLowerCase();
+        }
+
+        // 去除重复字符与空格
+        function removeDuplicates() {
+            const input = document.getElementById('trim-input').value;
+            const uniqueChars = Array.from(new Set(input)).join('');
+            document.getElementById('trim-output').innerText = uniqueChars;
+        }
+
+        function trimWhitespace() {
+            const input = document.getElementById('trim-input').value.trim();
+            document.getElementById('trim-output').innerText = input;
+        }
+
+        // 正则表达式匹配与替换
+        function applyRegex() {
+            const input = document.getElementById('regex-input').value;
+            const pattern = new RegExp(document.getElementById('regex-pattern').value, 'g');
+            const replacement = document.getElementById('regex-replace').value;
+            const result = input.replace(pattern, replacement);
+            document.getElementById('regex-output').innerText = result;
+        }
+
+        // HTML 实体编码与解码
+        function encodeHtmlEntities() {
+            const input = document.getElementById('html-input').value;
+            const encoded = input.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
+                return '&#' + i.charCodeAt(0) + ';';
+            });
+            document.getElementById('html-output').innerText = encoded;
+        }
+
+        function decodeHtmlEntities() {
+            const input = document.getElementById('html-input').value;
+            const textarea = document.createElement('textarea');
+            textarea.innerHTML = input;
+            document.getElementById('html-output').innerText = textarea.value;
+        }
+    </script>
+</body>
+</html>

@@ -70,3 +70,14 @@ footer {
     position: relative;
     margin-top: 20px;
 }
+
+.multi-column {
+    column-count: 2;  /* 設置為兩列 */
+    column-gap: 1rem;  /* 設置列之間的間距 */
+    width: 400px;  /* 下拉選單的寬度 */
+}
+
+.multi-column .dropdown-item {
+    display: block;  /* 保持每個項目是區塊顯示 */
+    width: 100%;  /* 每個項目佔滿整列 */
+}

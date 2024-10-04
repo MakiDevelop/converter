@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <title>QRCode產生器 - 0rz.tw工具箱</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="QRCode產生器">
+    <meta name="keywords" content="QRCode產生器, 格式轉換, 0rz.tw, 工具箱">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="0rz.tw工具箱">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="QRCode產生器 - 0rz.tw工具箱">
+    <meta property="og:description" content="QRCode產生器">
+    <meta property="og:url" content="https://0rz.tw/qrcodegen">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="0rz.tw工具箱">
+    <meta property="og:image" content="https://0rz.tw/static/images/0rz_tw.jpg">
+    <meta property="og:locale" content="zh_TW">
+    <meta property="og:updated_time" content="2024-09-30T12:00:00+00:00">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="QRCode產生器 - 0rz.tw工具箱">
+    <meta name="twitter:description" content="QRCode產生器">
+    <meta name="twitter:image" content="https://0rz.tw/static/images/0rz_tw.jpg">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://0rz.tw/qrcodegen">
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "QRCode產生器 - 0rz.tw工具箱",
+      "description": "QRCode產生器",
+      "url": "https://0rz.tw/qrcodegen",
+      "image": "https://0rz.tw/static/images/0rz_tw.jpg"
+    }
+    </script> <!-- 引入 Bootstrap CSS -->
+    <!-- 引入 Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding-top: 60px;
+        }
+
+        .container {
+            margin: 20px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+    <!-- 引入 QRCode 生成庫 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-5HFHM7MM');</script>
+    <!-- End Google Tag Manager -->
+</head>
+
+<body>
+
+    <!-- 這裡是加載共用的 header -->
+    <div id="header"></div>
+
+    <!-- 廣告版位 -->
+    <div class="ad-space">
+        <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
+        <div id="pixad3292adx"></div>
+        <ins class="adsbygoogle" style="display:inline-block;width:970px;height:250px" data-ad-region="falcon"
+            data-ad-client="ca-pub-6865528665029394" data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            jQuery.ajaxSetup({ 'cache': true });
+            jQuery.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
+            jQuery.ajaxSetup({ 'cache': false });
+        </script>
+    </div>
+    <div class="container mt-5 mx-auto">
+        <h1>QR Code 產生器</h1>
+
+        <div class="section">
+            <h2>選擇輸入類型</h2>
+            <select id="input-type" onchange="handleTypeChange()">
+                <option value="text">純文字</option>
+                <option value="url">URL</option>
+                <option value="phone">電話號碼</option>
+                <option value="email">電子郵件</option>
+                <option value="wifi">Wi-Fi</option>
+                <option value="geo">地理位置</option>
+                <option value="event">事件 (vCalendar)</option>
+                <option value="vcard">名片 (vCard)</option>
+                <option value="sms">簡訊</option>
+            </select>
+
+            <div id="input-fields" class="input-section">
+                <!-- 動態生成的輸入框將顯示在這裏 -->
+            </div>
+
+            <button onclick="generateQRCode()">生成 QR Code</button>
+        </div>
+
+        <div class="section">
+            <h2>QR Code 生成結果</h2>
+            <div id="qrcode"></div>
+            <div id="download-section" style="display: none;">
+                <label for="download-type">選擇下載類型:</label>
+                <select id="download-type">
+                    <option value="jpeg">JPEG</option>
+                    <option value="png">PNG</option>
+                    <option value="svg">SVG</option>
+                    <option value="bmp">BMP</option>
+                </select>
+                <button onclick="downloadQRCode()">下載 QR Code</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 廣告版位 -->
+    <div class="ad-space">
+        <div id="pixad3292adx"></div>
+        <ins class="adsbygoogle" style="display:inline-block;width:970px;height:250px" data-ad-region="falcon"
+            data-ad-client="ca-pub-6865528665029394" data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            jQuery.ajaxSetup({ 'cache': true });
+            jQuery.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
+            jQuery.ajaxSetup({ 'cache': false });
+        </script>
+    </div>
+
+    <!-- Modal: 通用提示框 -->
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">提示</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 這裡是加載共用的 footer -->
+    <div id="footer"></div>
+
+    <!-- 引入 Bootstrap 的 JS 和 Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 动态加载 header 和 footer
+        fetch('/static/html/header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('header').innerHTML = data);
+
+        fetch('/static/html/footer.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('footer').innerHTML = data);
+    </script>
+
+    <!-- 引入自定義 JS -->
+    <script src="static/js/app.js"></script>
+    <script src="static/js/qrcode_gen.js"></script>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5HFHM7MM" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+</body>
+
+</html>

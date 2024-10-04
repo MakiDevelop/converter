@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <title>圖片去背工具 - 0rz.tw工具箱</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="圖片去背工具（像剪刀剪的）">
+    <meta name="keywords" content="圖片去背工具, 0rz.tw, 工具箱">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="0rz.tw工具箱">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="圖片去背工具 - 0rz.tw工具箱">
+    <meta property="og:description" content="圖片去背工具，">
+    <meta property="og:url" content="https://0rz.tw/bgremove">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="0rz.tw工具箱">
+    <meta property="og:image" content="https://0rz.tw/static/images/0rz_tw.jpg">
+    <meta property="og:locale" content="zh_TW">
+    <meta property="og:updated_time" content="2024-09-30T12:00:00+00:00">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="圖片去背工具 - 0rz.tw工具箱">
+    <meta name="twitter:description" content="圖片去背工具（">
+    <meta name="twitter:image" content="https://0rz.tw/static/images/0rz_tw.jpg">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://0rz.tw/bgremove">
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "圖片去背工具 - 0rz.tw工具箱",
+      "description": "圖片去背工具（像剪刀剪的）",
+      "url": "https://0rz.tw/bgremove",
+      "image": "https://0rz.tw/static/images/0rz_tw.jpg"
+    }
+    </script>
+    <!-- 引入 Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="static/css/style.css">
+
+    <style>
+        body {
+            padding-top: 60px;
+        }
+        .ad-space {
+            min-height: 250px; /* 确保广告位有足够空间，不会跳动 */
+            margin-bottom: 20px; /* 增加广告和内容之间的间距 */
+        }
+        img, canvas {
+            max-width: 100%;
+            margin-top: 20px;
+        }
+        #outputCanvas {
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+        .btn-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+    <!-- 引入 TensorFlow.js 和 BodyPix -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix"></script>
+</head>
+<body>
+    <!-- 這裡是加載共用的 header -->
+    <div id="header"></div>
+
+    <!-- 廣告版位 -->
+    <div class="ad-space text-center">
+        <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
+        <div id="pixad3292adx"></div>
+        <ins class="adsbygoogle"
+        style="display:inline-block;width:970px;height:250px"
+        data-ad-region="falcon"
+        data-ad-client="ca-pub-6865528665029394"
+        data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            jQuery.ajaxSetup({'cache': true});
+            jQuery.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
+            jQuery.ajaxSetup({'cache': false});
+        </script>
+    </div>
+
+    <div class="container">
+        <h2 class="text-center mb-4">圖片去背工具（像剪刀剪的XD）</h2>
+        
+        <!-- 图片上传输入框 -->
+        <div class="mb-3">
+            <label for="imageUpload" class="form-label">選擇一張圖片</label>
+            <input type="file" id="imageUpload" accept="image/*" class="form-control" />
+        </div>
+        
+        <!-- 上传图片预览 -->
+        <img id="inputImage" src="" alt="Uploaded Image" class="img-fluid d-block mx-auto" />
+        
+        <!-- 处理后的图片输出 -->
+        <canvas id="outputCanvas" class="d-block mx-auto"></canvas>
+        
+        <!-- 按钮容器 -->
+        <div class="btn-container">
+            <button id="processButton" class="btn btn-primary">開始處理</button>
+            <button id="downloadButton" class="btn btn-success" style="display:none;">下載圖片</button>
+        </div>
+    </div>
+
+    <!-- 廣告版位 -->
+    <div class="ad-space text-center">
+        <div id="pixad3292adx"></div>
+        <ins class="adsbygoogle"
+        style="display:inline-block;width:970px;height:250px"
+        data-ad-region="falcon"
+        data-ad-client="ca-pub-6865528665029394"
+        data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            jQuery.ajaxSetup({'cache': true});
+            jQuery.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
+            jQuery.ajaxSetup({'cache': false});
+        </script>
+    </div>
+
+    <!-- Modal: 通用提示框 -->
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoModalLabel">提示</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 這裡是加載共用的 footer -->
+    <div id="footer"></div>
+
+    <!-- 引入 Bootstrap 的 JS 和 Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 动态加载 header 和 footer
+        fetch('/static/html/header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('header').innerHTML = data);
+
+        fetch('/static/html/footer.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('footer').innerHTML = data);
+    </script>
+    <!-- 引入自定義 JS -->
+    <script src="static/js/bg_remove.js"></script>
+    <script src="static/js/app.js"></script>
+</body>
+</html>

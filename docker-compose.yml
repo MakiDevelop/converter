@@ -3,7 +3,13 @@ services:
   converter-web:
     build: .
     ports:
-      - "80:8000"
+      - "8001:8000"
+    networks:
+      - shared-network
     volumes:
       - ./static:/app/static  # 将宿主机的 static 目录挂载到容器中的 /app/static
       - ./templates:/app/templates  # 同样挂载 templates 目录
+
+networks:
+  shared-network:
+    external: true

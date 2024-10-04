@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <title>Hash轉換工具 - 0rz.tw工具箱</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hash轉換工具">
+    <meta name="keywords" content="Hash轉換, 加密, 0rz.tw, 工具箱">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="0rz.tw工具箱">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Hash轉換工具 - 0rz.tw工具箱">
+    <meta property="og:description" content="Hash轉換工具">
+    <meta property="og:url" content="https://0rz.tw/hashconvert">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="0rz.tw工具箱">
+    <meta property="og:image" content="https://0rz.tw/static/images/0rz_tw.jpg">
+    <meta property="og:locale" content="zh_TW">
+    <meta property="og:updated_time" content="2024-09-30T12:00:00+00:00">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Hash轉換工具 - 0rz.tw工具箱">
+    <meta name="twitter:description" content="Hash轉換工具">
+    <meta name="twitter:image" content="https://0rz.tw/static/images/0rz_tw.jpg">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://0rz.tw/hashconvert">
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Hash轉換工具 - 0rz.tw工具箱",
+      "description": "Hash轉換工具",
+      "url": "https://0rz.tw/hashconvert",
+      "image": "https://0rz.tw/static/images/0rz_tw.jpg"
+    }
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="static/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+    <style>
+        body {
+            padding-top: 60px;
+        }
+
+        /* 为每个 radio button 和 label 增加右边距 */
+        input[type="radio"] {
+            margin-right: 5px;
+            /* 右边的距离 */
+        }
+
+        /* 为每个 label 和下一组 radio button 增加间距 */
+        label {
+            margin-right: 20px;
+            /* 你可以根据需要调整这个值 */
+        }
+    </style>
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-5HFHM7MM');</script>
+    <!-- End Google Tag Manager -->
+</head>
+
+<body>
+
+    <!-- 這裡是加載共用的 header -->
+    <div id="header"></div>
+
+    <!-- 廣告版位 -->
+    <div class="ad-space">
+        <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
+        <div id="pixad3292adx"></div>
+        <ins class="adsbygoogle" style="display:inline-block;width:970px;height:250px" data-ad-region="falcon"
+            data-ad-client="ca-pub-6865528665029394" data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            jQuery.ajaxSetup({ 'cache': true });
+            jQuery.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
+            jQuery.ajaxSetup({ 'cache': false });
+        </script>
+    </div>
+
+    <!-- 主內容 -->
+    <div class="container mt-5">
+        <h2>Hash轉換工具</h2>
+        <form id="hash-form">
+            <textarea id="input-text" class="form-control" placeholder="輸入需要轉換的字串" rows="6"></textarea>
+
+            <div class="mt-3">
+                <label for="hash-type">選擇Hash算法：</label>
+                <div>
+                    <input type="radio" id="md5" name="hash-type" value="md5" checked>
+                    <label for="md5">MD5</label>
+
+                    <input type="radio" id="sha256" name="hash-type" value="sha256">
+                    <label for="sha256">SHA-256</label>
+
+                    <input type="radio" id="sha512" name="hash-type" value="sha512">
+                    <label for="sha512">SHA-512</label>
+
+                    <input type="radio" id="sha3" name="hash-type" value="sha3">
+                    <label for="sha3">SHA-3</label>
+
+                    <input type="radio" id="pbkdf2" name="hash-type" value="pbkdf2">
+                    <label for="pbkdf2">PBKDF2</label>
+                </div>
+            </div>
+
+            <!-- 确保按钮的 type 为 button，防止表单提交 -->
+            <button id="hash-btn" type="button" class="btn btn-primary mt-3">生成Hash</button>
+        </form>
+
+        <h3 class="mt-5">Hash結果</h3>
+        <div id="output-hash" class="border p-3 mt-3" style="min-height: 160px; background-color: #f5f5f5;"></div>
+        <button id="copy-btn" class="btn btn-primary" style="margin-top: 10px;">複製</button>
+    </div>
+
+    <!-- 引入 Bootstrap 的 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('hash-btn').addEventListener('click', async function () {
+            const inputText = document.getElementById('input-text').value;
+            const hashType = document.querySelector('input[name="hash-type"]:checked').value;
+
+            if (!inputText) {
+                alert("请输入文本");
+                return;
+            }
+
+            // 调用 generateHash 生成Hash
+            const hash = await generateHash(inputText, hashType);
+            document.getElementById('output-hash').textContent = hash;
+        });
+
+        // 使用 async/await 处理异步算法
+        async function generateHash(text, type) {
+            // 使用 CryptoJS 处理 MD5、SHA-256、SHA-512、SHA-3
+            if (type === 'md5') {
+                return CryptoJS.MD5(text).toString();
+            } else if (type === 'sha256') {
+                return CryptoJS.SHA256(text).toString();
+            } else if (type === 'sha512') {
+                return CryptoJS.SHA512(text).toString();
+            } else if (type === 'sha3') {
+                return CryptoJS.SHA3(text, { outputLength: 512 }).toString();
+            }
+            // 使用 PBKDF2
+            else if (type === 'pbkdf2') {
+                const key128Bits = CryptoJS.PBKDF2(text, CryptoJS.lib.WordArray.random(128 / 8), {
+                    keySize: 128 / 32,
+                    iterations: 1000
+                });
+                return key128Bits.toString();
+            }
+            return "未支持的哈希算法";
+        }
+    </script>
+
+    <!-- 廣告版位 -->
+    <div class="ad-space">
+        <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
+        <div id="pixad3292adx"></div>
+        <ins class="adsbygoogle" style="display:inline-block;width:970px;height:250px" data-ad-region="falcon"
+            data-ad-client="ca-pub-6865528665029394" data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            jQuery.ajaxSetup({ 'cache': true });
+            jQuery.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
+            jQuery.ajaxSetup({ 'cache': false });
+        </script>
+    </div>
+
+    <!-- 這裡是加載共用的 footer -->
+    <div id="footer"></div>
+
+    <!-- 引入 Bootstrap 的 JS 和 Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 動態加載 header 和 footer
+        document.getElementById('header').innerHTML = fetch('/static/html/header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('header').innerHTML = data);
+
+        document.getElementById('footer').innerHTML = fetch('/static/html/footer.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('footer').innerHTML = data);
+
+    </script>
+    <!-- 引入自定義 JS -->
+    <script src="static/js/hash_convert.js"></script>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5HFHM7MM" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+</body>
+
+</html>
