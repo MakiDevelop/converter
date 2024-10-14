@@ -87,6 +87,18 @@ async def color_code_tool(request: Request):
 async def img_compress(request: Request):
     return templates.TemplateResponse("image_compression.html", {"request": request})
 
+@app.get("/passwdgen", response_class=HTMLResponse)
+async def passwd_generate(request: Request):
+    return templates.TemplateResponse("password_generate.html", {"request": request})
+
+@app.get("/screenshot", response_class=HTMLResponse)
+async def screenshot(request: Request):
+    return templates.TemplateResponse("screen_shot.html", {"request": request})
+
+@app.get("/htmlende", response_class=HTMLResponse)
+async def htmlende(request: Request):
+    return templates.TemplateResponse("html_encode_decode.html", {"request": request})
+
 # 處理繁簡轉換的 POST 請求
 @app.post("/convert_zh")
 async def convert_zh(request: ConversionRequest):

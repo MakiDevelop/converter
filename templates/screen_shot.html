@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>屏幕截圖與註釋工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #toolbar {
+            margin-bottom: 10px;
+        }
+
+        canvas {
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>屏幕截圖與註釋工具</h1>
+
+    <div id="toolbar">
+        <button onclick="startCapture()">截取屏幕</button>
+        <button onclick="addArrow()">箭頭</button>
+        <button onclick="addText()">文字</button>
+        <button onclick="saveImage()">保存</button>
+    </div>
+
+    <canvas id="canvas" width="800" height="600"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let imageLoaded = false;
+
+        // 開始屏幕截圖
+        async function startCapture() {
+            try {
+                const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                const track = stream.getVideoTracks()[0];
+                const imageCapture = new ImageCapture(track);
+                const bitmap = await imageCapture.grabFrame();
+                track.stop();
+
+                // 將截圖畫到 Canvas 上
+                ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+                imageLoaded = true;
+            } catch (err) {
+                console.error("屏幕截圖失敗:", err);
+            }
+        }
+
+        // 添加箭頭標註
+        function addArrow() {
+            if (!imageLoaded) return alert("請先截取屏幕");
+
+            ctx.beginPath();
+            ctx.moveTo(100, 100);  // 箭頭起點
+            ctx.lineTo(200, 200);  // 箭頭終點
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 5;
+            ctx.stroke();
+
+            // 畫箭頭
+            ctx.lineTo(190, 190);
+            ctx.moveTo(200, 200);
+            ctx.lineTo(190, 210);
+            ctx.stroke();
+        }
+
+        // 添加文字標註
+        function addText() {
+            if (!imageLoaded) return alert("請先截取屏幕");
+
+            const text = prompt("輸入標註文字:");
+            if (text) {
+                ctx.font = "20px Arial";
+                ctx.fillStyle = "blue";
+                ctx.fillText(text, 300, 300);  // 指定文本位置
+            }
+        }
+
+        // 保存 Canvas 爲圖片
+        function saveImage() {
+            const link = document.createElement('a');
+            link.download = 'screenshot.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    </script>
+
+</body>
+</html>
