@@ -1,3 +1,16 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const timezoneSelect = document.getElementById('timezone-select');
+    
+    // 動態生成 UTC±X 格式的時區選項
+    for (let i = -12; i <= 14; i++) {
+        const offset = i >= 0 ? `+${i}` : i;
+        const option = document.createElement('option');
+        option.value = `UTC${offset}`;
+        option.text = `UTC${offset}`;
+        timezoneSelect.appendChild(option);
+    }
+});
+
 // Timestamp 與日期轉換
 function convertToDate() {
     const timestampInput = document.getElementById('timestamp-input').value;
@@ -25,10 +38,20 @@ function convertToTimestamp() {
 function convertTimezone() {
     const dateInput = document.getElementById('timezone-date').value;
     const selectedTimezone = document.getElementById('timezone-select').value;
+    
     if (dateInput) {
         const date = new Date(dateInput);
-        const options = { timeZone: selectedTimezone, hour12: false };
-        const formattedDate = date.toLocaleString('zh-Hant', options);
+        const offsetHours = parseInt(selectedTimezone.replace('UTC', ''), 10); // 提取偏移量數字
+        
+        // 計算 UTC 時間
+        const utcDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000));
+        
+        // 應用選中的時區偏移量
+        const targetDate = new Date(utcDate.getTime() + (offsetHours * 60 * 60000));
+        
+        // 格式化時間
+        const formattedDate = targetDate.toISOString().slice(0, 19).replace('T', ' ');
+        
         document.getElementById('timezone-output').innerText = formattedDate;
     } else {
         document.getElementById('timezone-output').innerText = '請輸入有效的日期和時間';
