@@ -206,6 +206,7 @@ async def formatjson(request: Request):
 async def pdfmergesplit(request: Request):
     return templates.TemplateResponse("pdfmergesplit.html", {"request": request})
 
+
 # 创建保存生成 PDF 文件的目录
 os.makedirs("processed_pdfs", exist_ok=True)
 
