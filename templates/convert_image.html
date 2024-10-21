@@ -2,18 +2,18 @@
 <html lang="zh-Hant">
 
 <head>
-    <title>NDJSON 轉 JSON - 0rz.tw工具箱</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="NDJSON 轉 JSON">
-    <meta name="keywords" content="NDJSON 轉 JSON, 格式轉換, 0rz.tw, 工具箱">
+    <title>圖片格式轉換器 - 0rz.tw工具箱</title>
+    <meta name="description" content="圖片格式轉換器">
+    <meta name="keywords" content="圖片格式轉換器, 格式轉換, 0rz.tw, 工具箱">
     <meta name="robots" content="index, follow">
     <meta name="author" content="0rz.tw工具箱">
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="NDJSON 轉 JSON - 0rz.tw工具箱">
-    <meta property="og:description" content="NDJSON 轉 JSON">
-    <meta property="og:url" content="https://0rz.tw/ndjson2json">
+    <meta property="og:title" content="圖片格式轉換器 - 0rz.tw工具箱">
+    <meta property="og:description" content="圖片格式轉換器">
+    <meta property="og:url" content="https://0rz.tw/convertimage">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="0rz.tw工具箱">
     <meta property="og:image" content="https://0rz.tw/static/images/0rz_tw.jpg">
@@ -22,41 +22,43 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="NDJSON 轉 JSON - 0rz.tw工具箱">
-    <meta name="twitter:description" content="NDJSON 轉 JSON">
+    <meta name="twitter:title" content="圖片格式轉換器 - 0rz.tw工具箱">
+    <meta name="twitter:description" content="圖片格式轉換器">
     <meta name="twitter:image" content="https://0rz.tw/static/images/0rz_tw.jpg">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://0rz.tw/ndjson2json">
+    <link rel="canonical" href="https://0rz.tw/convertimage">
 
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebPage",
-      "name": "NDJSON 轉 JSON - 0rz.tw工具箱",
-      "description": "NDJSON 轉 JSON",
-      "url": "https://0rz.tw/ndjson2json",
-      "image": "https://0rz.tw/static/images/0rz_tw.jpg"
-    }
-    </script>
-    <!-- 引入 Bootstrap CSS -->
+{
+"@context": "https://schema.org",
+"@type": "WebPage",
+"name": "圖片格式轉換器 - 0rz.tw工具箱",
+"description": "圖片格式轉換器",
+"url": "https://0rz.tw/convertimage",
+"image": "https://0rz.tw/static/images/0rz_tw.jpg"
+}
+</script> <!-- 引入 Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- 引入自定義樣式 -->
     <link rel="stylesheet" href="/static/css/style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- 引入自動廣告JS -->
-    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1727974428384292"
-    crossorigin="anonymous"></script> -->
-    
     <style>
-        /* 为 body 设置固定的 padding-top 确保内容不会被导航栏遮挡 */
         body {
-            padding-top: 60px;
-            /* 假设导航栏的高度为60px，根据实际情况调整 */
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        input,
+        select,
+        button {
+            display: block;
+            margin-bottom: 20px;
+            padding: 10px;
+            width: 100%;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Google Tag Manager -->
     <script>(function (w, d, s, l, i) {
             w[l] = w[l] || []; w[l].push({
@@ -70,7 +72,6 @@
 </head>
 
 <body>
-
     <!-- 這裡是加載共用的 header -->
     <div id="header"></div>
 
@@ -78,35 +79,62 @@
     <div class="ad-space">
         <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
         <div id="pixad3292adx"></div>
-        <ins class="adsbyfalcon" data-ad-client="1" data-ad-slot="5499" style="display:inline-block;width:970px;height:250px"></ins>
+        <ins class="adsbyfalcon" data-ad-client="1" data-ad-slot="5499"
+            style="display:inline-block;width:970px;height:250px"></ins>
         <script async src="https://falcon-asset.pixfs.net/js/adsbyfalcon.min.js"></script>
     </div>
 
-    <!-- 主內容 -->
-    <div class="container">
-        <div class="row">
-            <div class="col-md-5 textarea-container">
-                <h3>輸入NDJSON</h3>
-                <textarea id="ndjson-input" class="form-control" placeholder="在此貼入 NDJSON格式資料"></textarea>
-            </div>
+    <div class="container mt-5">
+        <h1>圖片格式轉換器</h1>
 
-            <div class="col-md-2 parse-btn-container">
-                <button id="parse-btn" class="btn btn-primary">Parse</button>
-            </div>
+        <form id="imageConverterForm">
+            <input type="file" id="imageFile" name="file" accept="image/*">
 
-            <div class="col-md-5 output-container">
-                <h3>JSON輸出</h3>
-                <div id="output"></div> <!-- 用來顯示解析後的 JSON -->
-                <button id="toggle-output-btn" class="btn btn-primary">全部收合</button>
-                <button id="download-btn" class="btn btn-secondary" style="margin-top: 10px;">下載JSON檔案</button>
-                <!-- 新增下載按鈕 -->
-            </div>
-        </div>
+            <label for="formatSelect">選擇目標格式：</label>
+            <select id="formatSelect">
+                <option value="jpeg">JPEG</option>
+                <option value="png">PNG</option>
+                <option value="gif">GIF</option>
+                <option value="webp">WebP</option>
+                <option value="bmp">BMP</option>
+            </select>
+
+            <button type="button" onclick="convertImage()">轉換圖片</button>
+        </form>
+
+        <h2>轉換後的圖片：</h2>
+        <img id="convertedImage" style="max-width: 100%; display: none;">
+
+        <script>
+            async function convertImage() {
+                const formData = new FormData();
+                const fileInput = document.getElementById('imageFile').files[0];
+                const formatSelect = document.getElementById('formatSelect').value;
+
+                formData.append("file", fileInput);
+                formData.append("target_format", formatSelect);
+
+                const response = await fetch('/convert_image', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+                    const imgElement = document.getElementById('convertedImage');
+                    imgElement.src = url;
+                    imgElement.style.display = 'block';
+                } else {
+                    const result = await response.json();
+                    alert(result.error || "Image conversion failed");
+                }
+            }
+        </script>
     </div>
 
     <!-- 廣告版位 -->
     <div class="ad-space">
-        <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
         <div id="pixad3292adx"></div>
         <ins class="adsbygoogle" style="display:inline-block;width:970px;height:250px" data-ad-region="falcon"
             data-ad-client="ca-pub-6865528665029394" data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
@@ -141,12 +169,9 @@
 
     <div class="tool-description bg-light text-center py-4">
         <div class="container">
-            <h5 class="text-primary">NDJSON 轉 JSON 工具說明</h5>
+            <h5 class="text-primary">圖片格式轉換器說明</h5>
             <p class="text-muted">
-                此工具用於將 NDJSON（Newline Delimited JSON）格式轉換為標準的 JSON 格式。將多行 NDJSON 資料貼入左側欄位，點擊 "Parse" 按鈕，右側將顯示格式化後的 JSON。
-            </p>
-            <p class="text-muted">
-                轉換後的 JSON 支持下載，您也可以直接複製結果使用，滿足不同的應用場景需求。
+                此工具幫助您在 JPEG、PNG、GIF、WebP、BMP檔案格式之間進行轉換。
             </p>
         </div>
     </div>
@@ -158,22 +183,22 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // 動態加載 header 和 footer
-        document.getElementById('header').innerHTML = fetch('/static/html/header.html')
+        fetch('/static/html/header.html')
             .then(response => response.text())
             .then(data => document.getElementById('header').innerHTML = data);
 
-        document.getElementById('footer').innerHTML = fetch('/static/html/footer.html')
+        fetch('/static/html/footer.html')
             .then(response => response.text())
             .then(data => document.getElementById('footer').innerHTML = data);
-
     </script>
     <!-- 引入自定義 JS -->
-    <script src="static/js/ndjson2json.js"></script>
+    <script src="static/js/convertimage.js"></script>
     <script src="static/js/app.js"></script>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5HFHM7MM" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+
 </body>
 
 </html>

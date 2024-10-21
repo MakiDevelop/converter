@@ -2,18 +2,18 @@
 <html lang="zh-Hant">
 
 <head>
-    <title>NDJSON 轉 JSON - 0rz.tw工具箱</title>
+    <title>CSS格式化壓縮工具 - 0rz.tw工具箱</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="NDJSON 轉 JSON">
-    <meta name="keywords" content="NDJSON 轉 JSON, 格式轉換, 0rz.tw, 工具箱">
+    <meta name="description" content="CSS格式化／壓縮工具">
+    <meta name="keywords" content="CSS格式化壓縮, 中文轉換, 0rz.tw, 工具箱">
     <meta name="robots" content="index, follow">
     <meta name="author" content="0rz.tw工具箱">
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="NDJSON 轉 JSON - 0rz.tw工具箱">
-    <meta property="og:description" content="NDJSON 轉 JSON">
-    <meta property="og:url" content="https://0rz.tw/ndjson2json">
+    <meta property="og:title" content="CSS格式化壓縮工具 - 0rz.tw工具箱">
+    <meta property="og:description" content="CSS格式化（可讀化）／壓縮工具">
+    <meta property="og:url" content="https://0rz.tw/cssformat">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="0rz.tw工具箱">
     <meta property="og:image" content="https://0rz.tw/static/images/0rz_tw.jpg">
@@ -22,34 +22,39 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="NDJSON 轉 JSON - 0rz.tw工具箱">
-    <meta name="twitter:description" content="NDJSON 轉 JSON">
+    <meta name="twitter:title" content="CSS格式化壓縮工具 - 0rz.tw工具箱">
+    <meta name="twitter:description" content="CSS格式化（可讀化）／壓縮（最小化）工具">
     <meta name="twitter:image" content="https://0rz.tw/static/images/0rz_tw.jpg">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://0rz.tw/ndjson2json">
+    <link rel="canonical" href="https://0rz.tw/cssformat">
 
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      "name": "NDJSON 轉 JSON - 0rz.tw工具箱",
-      "description": "NDJSON 轉 JSON",
-      "url": "https://0rz.tw/ndjson2json",
+      "name": "CSS格式化壓縮工具 - 0rz.tw工具箱",
+      "description": "CSS格式化（可讀化）／壓縮（最小化）工具",
+      "url": "https://0rz.tw/cssformat",
       "image": "https://0rz.tw/static/images/0rz_tw.jpg"
     }
     </script>
+
     <!-- 引入 Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- 引入自定義樣式 -->
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="static/css/formattool.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 引入 CSS Beautify 库 -->
+    <script src="https://cdn.jsdelivr.net/npm/cssbeautify@0.3.1/cssbeautify.min.js"></script>
+    <!-- 引入 CSO 库 -->
+    <script src="https://cdn.jsdelivr.net/npm/csso@5.0.5/dist/csso.min.js"></script>
 
     <!-- 引入自動廣告JS -->
     <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1727974428384292"
     crossorigin="anonymous"></script> -->
-    
+
     <style>
         /* 为 body 设置固定的 padding-top 确保内容不会被导航栏遮挡 */
         body {
@@ -78,35 +83,39 @@
     <div class="ad-space">
         <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
         <div id="pixad3292adx"></div>
-        <ins class="adsbyfalcon" data-ad-client="1" data-ad-slot="5499" style="display:inline-block;width:970px;height:250px"></ins>
+        <ins class="adsbyfalcon" data-ad-client="1" data-ad-slot="5499"
+            style="display:inline-block;width:970px;height:250px"></ins>
         <script async src="https://falcon-asset.pixfs.net/js/adsbyfalcon.min.js"></script>
     </div>
 
     <!-- 主內容 -->
-    <div class="container">
-        <div class="row">
-            <div class="col-md-5 textarea-container">
-                <h3>輸入NDJSON</h3>
-                <textarea id="ndjson-input" class="form-control" placeholder="在此貼入 NDJSON格式資料"></textarea>
-            </div>
 
-            <div class="col-md-2 parse-btn-container">
-                <button id="parse-btn" class="btn btn-primary">Parse</button>
+    <div class="tool-section container mt-5">
+        <h3>CSS 格式化/壓縮</h3>
+        <form id="css-form" method="post">
+            <div class="form-group">
+                <label for="css-input">輸入您的 CSS 程式碼：</label>
+                <textarea class="form-control" id="css-input" name="css" rows="10"
+                    placeholder="貼上您的 CSS 程式碼..."></textarea>
             </div>
-
-            <div class="col-md-5 output-container">
-                <h3>JSON輸出</h3>
-                <div id="output"></div> <!-- 用來顯示解析後的 JSON -->
-                <button id="toggle-output-btn" class="btn btn-primary">全部收合</button>
-                <button id="download-btn" class="btn btn-secondary" style="margin-top: 10px;">下載JSON檔案</button>
-                <!-- 新增下載按鈕 -->
+            <div class="form-group">
+                <button type="button" class="btn btn-primary" onclick="formatCSS()">格式化</button>
+                <button type="button" class="btn btn-secondary" onclick="minifyCSS()">壓縮</button>
             </div>
-        </div>
+            <div class="form-group">
+                <label for="css-output">輸出結果：</label>
+                <textarea class="form-control" id="css-output" name="css-output" rows="10" readonly></textarea>
+            </div>
+    
+            <div class="form-group">
+                <button type="button" class="btn btn-success" onclick="copyToClipboard()">複製</button>
+            </div>
+        </form>
     </div>
+
 
     <!-- 廣告版位 -->
     <div class="ad-space">
-        <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
         <div id="pixad3292adx"></div>
         <ins class="adsbygoogle" style="display:inline-block;width:970px;height:250px" data-ad-region="falcon"
             data-ad-client="ca-pub-6865528665029394" data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
@@ -141,12 +150,9 @@
 
     <div class="tool-description bg-light text-center py-4">
         <div class="container">
-            <h5 class="text-primary">NDJSON 轉 JSON 工具說明</h5>
+            <h5 class="text-primary">CSS格式化／壓縮工具說明</h5>
             <p class="text-muted">
-                此工具用於將 NDJSON（Newline Delimited JSON）格式轉換為標準的 JSON 格式。將多行 NDJSON 資料貼入左側欄位，點擊 "Parse" 按鈕，右側將顯示格式化後的 JSON。
-            </p>
-            <p class="text-muted">
-                轉換後的 JSON 支持下載，您也可以直接複製結果使用，滿足不同的應用場景需求。
+                此工具可以將CSS程式碼在格式化（可讀化）與壓縮（最小化）之間轉換。貼入CSS程式碼後選擇格式化／壓縮以顯示結果。
             </p>
         </div>
     </div>
@@ -154,21 +160,29 @@
     <!-- 這裡是加載共用的 footer -->
     <div id="footer"></div>
 
-    <!-- 引入 Bootstrap 的 JS 和 Popper.js -->
+    <!-- 引入 Bootstrap 的 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // 動態加載 header 和 footer
-        document.getElementById('header').innerHTML = fetch('/static/html/header.html')
+        // 动态加载 header 和 footer
+        fetch('/static/html/header.html')
             .then(response => response.text())
-            .then(data => document.getElementById('header').innerHTML = data);
+            .then(data => {
+                document.getElementById('header').innerHTML = data;
 
-        document.getElementById('footer').innerHTML = fetch('/static/html/footer.html')
+                // 确保 Bootstrap 的下拉菜单功能被初始化
+                var dropdownElements = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+                dropdownElements.map(function (dropdownToggle) {
+                    return new bootstrap.Dropdown(dropdownToggle);
+                });
+            });
+
+        fetch('/static/html/footer.html')
             .then(response => response.text())
             .then(data => document.getElementById('footer').innerHTML = data);
-
     </script>
+
     <!-- 引入自定義 JS -->
-    <script src="static/js/ndjson2json.js"></script>
+    <script src="static/js/cssformat.js"></script>
     <script src="static/js/app.js"></script>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5HFHM7MM" height="0" width="0"

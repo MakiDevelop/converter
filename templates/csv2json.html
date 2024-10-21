@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 
 <head>
-    <title>NDJSON 轉 JSON - 0rz.tw工具箱</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="NDJSON 轉 JSON">
-    <meta name="keywords" content="NDJSON 轉 JSON, 格式轉換, 0rz.tw, 工具箱">
+    <title>CSV與JSON轉換器 - 0rz.tw工具箱</title>
+    <meta name="description" content="CSV與JSON轉換器">
+    <meta name="keywords" content="CSV與JSON轉換器, 格式轉換, 0rz.tw, 工具箱">
     <meta name="robots" content="index, follow">
     <meta name="author" content="0rz.tw工具箱">
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="NDJSON 轉 JSON - 0rz.tw工具箱">
-    <meta property="og:description" content="NDJSON 轉 JSON">
-    <meta property="og:url" content="https://0rz.tw/ndjson2json">
+    <meta property="og:title" content="CSV與JSON轉換器 - 0rz.tw工具箱">
+    <meta property="og:description" content="CSV與JSON轉換器">
+    <meta property="og:url" content="https://0rz.tw/csv2json">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="0rz.tw工具箱">
     <meta property="og:image" content="https://0rz.tw/static/images/0rz_tw.jpg">
@@ -22,41 +22,53 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="NDJSON 轉 JSON - 0rz.tw工具箱">
-    <meta name="twitter:description" content="NDJSON 轉 JSON">
+    <meta name="twitter:title" content="CSV與JSON轉換器 - 0rz.tw工具箱">
+    <meta name="twitter:description" content="CSV與JSON轉換器">
     <meta name="twitter:image" content="https://0rz.tw/static/images/0rz_tw.jpg">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://0rz.tw/ndjson2json">
+    <link rel="canonical" href="https://0rz.tw/csv2json">
 
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      "name": "NDJSON 轉 JSON - 0rz.tw工具箱",
-      "description": "NDJSON 轉 JSON",
-      "url": "https://0rz.tw/ndjson2json",
+      "name": "CSV與JSON轉換器 - 0rz.tw工具箱",
+      "description": "CSV與JSON轉換器",
+      "url": "https://0rz.tw/csv2json",
       "image": "https://0rz.tw/static/images/0rz_tw.jpg"
     }
-    </script>
-    <!-- 引入 Bootstrap CSS -->
+    </script> <!-- 引入 Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- 引入自定義樣式 -->
     <link rel="stylesheet" href="/static/css/style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- 引入自動廣告JS -->
-    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1727974428384292"
-    crossorigin="anonymous"></script> -->
-    
+    <title>CSV & JSON Converter</title>
     <style>
-        /* 为 body 设置固定的 padding-top 确保内容不会被导航栏遮挡 */
         body {
-            padding-top: 60px;
-            /* 假设导航栏的高度为60px，根据实际情况调整 */
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        textarea,
+        input {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Google Tag Manager -->
     <script>(function (w, d, s, l, i) {
             w[l] = w[l] || []; w[l].push({
@@ -70,7 +82,6 @@
 </head>
 
 <body>
-
     <!-- 這裡是加載共用的 header -->
     <div id="header"></div>
 
@@ -78,35 +89,58 @@
     <div class="ad-space">
         <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
         <div id="pixad3292adx"></div>
-        <ins class="adsbyfalcon" data-ad-client="1" data-ad-slot="5499" style="display:inline-block;width:970px;height:250px"></ins>
+        <ins class="adsbyfalcon" data-ad-client="1" data-ad-slot="5499"
+            style="display:inline-block;width:970px;height:250px"></ins>
         <script async src="https://falcon-asset.pixfs.net/js/adsbyfalcon.min.js"></script>
     </div>
 
-    <!-- 主內容 -->
-    <div class="container">
-        <div class="row">
-            <div class="col-md-5 textarea-container">
-                <h3>輸入NDJSON</h3>
-                <textarea id="ndjson-input" class="form-control" placeholder="在此貼入 NDJSON格式資料"></textarea>
-            </div>
+    <div class="container mt-5">
 
-            <div class="col-md-2 parse-btn-container">
-                <button id="parse-btn" class="btn btn-primary">Parse</button>
-            </div>
+        <h2>CSV 轉 JSON</h2>
+        <form id="csv2jsonForm" enctype="multipart/form-data">
+            <input type="file" id="csvFile" name="file" accept=".csv">
+            <button type="button" onclick="convertCsvToJson()">轉換為 JSON</button>
+        </form>
 
-            <div class="col-md-5 output-container">
-                <h3>JSON輸出</h3>
-                <div id="output"></div> <!-- 用來顯示解析後的 JSON -->
-                <button id="toggle-output-btn" class="btn btn-primary">全部收合</button>
-                <button id="download-btn" class="btn btn-secondary" style="margin-top: 10px;">下載JSON檔案</button>
-                <!-- 新增下載按鈕 -->
-            </div>
-        </div>
+        <pre id="jsonOutput"></pre>
+
+        <h2>JSON 轉 CSV</h2>
+        <form id="json2csvForm">
+            <textarea id="jsonInput" placeholder="输入 JSON" rows="8"></textarea>
+            <button type="button" onclick="convertJsonToCsv()">轉換為 CSV</button>
+        </form>
+
+        <pre id="csvOutput"></pre>
     </div>
+    <script>
+        async function convertCsvToJson() {
+            const formData = new FormData();
+            const fileInput = document.getElementById('csvFile').files[0];
+            formData.append("file", fileInput);
 
+            const response = await fetch('/csv2json', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            document.getElementById('jsonOutput').textContent = JSON.stringify(result, null, 2);
+        }
+
+        async function convertJsonToCsv() {
+            const content = document.getElementById('jsonInput').value;
+            const response = await fetch('/json2csv', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ content })
+            });
+
+            const result = await response.text();
+            document.getElementById('csvOutput').textContent = result;
+        }
+    </script>
     <!-- 廣告版位 -->
     <div class="ad-space">
-        <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
         <div id="pixad3292adx"></div>
         <ins class="adsbygoogle" style="display:inline-block;width:970px;height:250px" data-ad-region="falcon"
             data-ad-client="ca-pub-6865528665029394" data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
@@ -141,12 +175,9 @@
 
     <div class="tool-description bg-light text-center py-4">
         <div class="container">
-            <h5 class="text-primary">NDJSON 轉 JSON 工具說明</h5>
+            <h5 class="text-primary">CSV與JSON轉換器說明</h5>
             <p class="text-muted">
-                此工具用於將 NDJSON（Newline Delimited JSON）格式轉換為標準的 JSON 格式。將多行 NDJSON 資料貼入左側欄位，點擊 "Parse" 按鈕，右側將顯示格式化後的 JSON。
-            </p>
-            <p class="text-muted">
-                轉換後的 JSON 支持下載，您也可以直接複製結果使用，滿足不同的應用場景需求。
+                此工具幫助您在 CSV與JSON之間進行轉換。
             </p>
         </div>
     </div>
@@ -157,23 +188,23 @@
     <!-- 引入 Bootstrap 的 JS 和 Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // 動態加載 header 和 footer
-        document.getElementById('header').innerHTML = fetch('/static/html/header.html')
+        // 动态加载 header 和 footer
+        fetch('/static/html/header.html')
             .then(response => response.text())
             .then(data => document.getElementById('header').innerHTML = data);
 
-        document.getElementById('footer').innerHTML = fetch('/static/html/footer.html')
+        fetch('/static/html/footer.html')
             .then(response => response.text())
             .then(data => document.getElementById('footer').innerHTML = data);
-
     </script>
     <!-- 引入自定義 JS -->
-    <script src="static/js/ndjson2json.js"></script>
+    <script src="static/js/csv2json.js"></script>
     <script src="static/js/app.js"></script>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5HFHM7MM" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+
 </body>
 
 </html>

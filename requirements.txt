@@ -7,3 +7,8 @@ sqlalchemy
 python-multipart
 pydantic
 opencc-python-reimplemented
+Pillow
+markdown
+html2text
+xmltodict
+pypdf2

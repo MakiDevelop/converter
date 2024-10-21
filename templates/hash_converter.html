@@ -52,6 +52,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
+    <!-- 引入自動廣告JS -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1727974428384292"
+    crossorigin="anonymous"></script> -->
+    
     <style>
         body {
             padding-top: 60px;
@@ -180,14 +184,17 @@
     <div class="ad-space">
         <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
         <div id="pixad3292adx"></div>
-        <ins class="adsbygoogle" style="display:inline-block;width:970px;height:250px" data-ad-region="falcon"
-            data-ad-client="ca-pub-6865528665029394" data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-            jQuery.ajaxSetup({ 'cache': true });
-            jQuery.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
-            jQuery.ajaxSetup({ 'cache': false });
-        </script>
+        <ins class="adsbyfalcon" data-ad-client="1" data-ad-slot="5499" style="display:inline-block;width:970px;height:250px"></ins>
+        <script async src="https://falcon-asset.pixfs.net/js/adsbyfalcon.min.js"></script>
+    </div>
+
+    <div class="tool-description bg-light text-center py-4">
+        <div class="container">
+            <h5 class="text-primary">Hash 轉換工具說明</h5>
+            <p class="text-muted">
+                此工具可計算字串的 MD5、SHA-256 等 hash 值，並進行格式轉換。貼入文本後選擇 Hash 算法，點擊 "生成Hash" 按鈕查看結果。
+            </p>
+        </div>
     </div>
 
     <!-- 這裡是加載共用的 footer -->

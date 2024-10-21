@@ -43,6 +43,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- 引入自定義樣式 -->
     <link rel="stylesheet" href="/static/css/style.css">
+
+    <!-- 引入自動廣告JS -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1727974428384292"
+    crossorigin="anonymous"></script> -->
+    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -110,15 +115,10 @@
     <div class="ad-space">
         <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
         <div id="pixad3292adx"></div>
-        <ins class="adsbygoogle" style="display:inline-block;width:970px;height:250px" data-ad-region="falcon"
-            data-ad-client="ca-pub-6865528665029394" data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-            jQuery.ajaxSetup({ 'cache': true });
-            jQuery.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
-            jQuery.ajaxSetup({ 'cache': false });
-        </script>
+        <ins class="adsbyfalcon" data-ad-client="1" data-ad-slot="5499" style="display:inline-block;width:970px;height:250px"></ins>
+        <script async src="https://falcon-asset.pixfs.net/js/adsbyfalcon.min.js"></script>
     </div>
+    
     <div class="container">
         <h1>圖片壓縮工具</h1>
 
@@ -174,6 +174,15 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="tool-description bg-light text-center py-4">
+        <div class="container">
+            <h5 class="text-primary">圖片壓縮工具說明</h5>
+            <p class="text-muted">
+                此工具可壓縮 JPEG、PNG 等格式的圖片，以減少文件大小而不明顯影響質量。上傳圖片後，點擊 "壓縮圖片" 按鈕，下載壓縮後的圖片。
+            </p>
         </div>
     </div>
 

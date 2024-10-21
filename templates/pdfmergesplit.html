@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF 合併/分割工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        input,
+        button {
+            display: block;
+            margin-bottom: 20px;
+            padding: 10px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>PDF 合併/分割工具</h1>
+
+    <h2>合併 PDF</h2>
+    <form id="mergeForm" enctype="multipart/form-data">
+        <input type="file" id="mergeFiles" name="files" multiple accept="application/pdf">
+        <button type="button" onclick="mergePdfs()">合併 PDF</button>
+    </form>
+
+    <h2>分割 PDF</h2>
+    <form id="splitForm" enctype="multipart/form-data">
+        <input type="file" id="splitFile" name="file" accept="application/pdf">
+        <input type="number" id="startPage" name="start_page" placeholder="起始頁碼">
+        <input type="number" id="endPage" name="end_page" placeholder="結束頁碼">
+        <button type="button" onclick="splitPdf()">分割 PDF</button>
+    </form>
+
+    <h2>下載結果：</h2>
+    <a id="downloadLink" href="#" style="display:none;">下載合併/分割後的 PDF</a>
+
+    <script>
+        async function mergePdfs() {
+            const formData = new FormData();
+            const files = document.getElementById('mergeFiles').files;
+
+            for (let file of files) {
+                formData.append("files", file);
+            }
+
+            const response = await fetch('/merge_pdfs', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = url;
+                downloadLink.style.display = 'block';
+                downloadLink.textContent = '下載合併後的 PDF';
+            } else {
+                alert("PDF 合併失敗");
+            }
+        }
+
+        async function splitPdf() {
+            const formData = new FormData();
+            const file = document.getElementById('splitFile').files[0];
+            const startPage = document.getElementById('startPage').value;
+            const endPage = document.getElementById('endPage').value;
+
+            formData.append("file", file);
+            formData.append("start_page", startPage);
+            formData.append("end_page", endPage);
+
+            const response = await fetch('/split_pdf', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = url;
+                downloadLink.style.display = 'block';
+                downloadLink.textContent = '下載分割後的 PDF';
+            } else {
+                alert("PDF 分割失敗");
+            }
+        }
+    </script>
+
+</body>
+
+</html>

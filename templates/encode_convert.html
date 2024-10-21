@@ -45,6 +45,11 @@
     <!-- 引入自定義樣式 -->
     <link rel="stylesheet" href="/static/css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- 引入自動廣告JS -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1727974428384292"
+    crossorigin="anonymous"></script> -->
+    
     <style>
         /* 为 body 设置固定的 padding-top 确保内容不会被导航栏遮挡 */
         body {
@@ -73,14 +78,8 @@
     <div class="ad-space">
         <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
         <div id="pixad3292adx"></div>
-        <ins class="adsbygoogle" style="display:inline-block;width:970px;height:250px" data-ad-region="falcon"
-            data-ad-client="ca-pub-6865528665029394" data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-            jQuery.ajaxSetup({ 'cache': true });
-            jQuery.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
-            jQuery.ajaxSetup({ 'cache': false });
-        </script>
+        <ins class="adsbyfalcon" data-ad-client="1" data-ad-slot="5499" style="display:inline-block;width:970px;height:250px"></ins>
+        <script async src="https://falcon-asset.pixfs.net/js/adsbyfalcon.min.js"></script>
     </div>
 
     <!-- 主內容 -->
@@ -143,6 +142,15 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="tool-description bg-light text-center py-4">
+        <div class="container">
+            <h5 class="text-primary">UTF-8 轉碼工具說明</h5>
+            <p class="text-muted">
+                此工具用於在多種編碼格式之間進行轉換，將輸入的文本轉換為 UTF-8 或 BIG5 編碼格式。上傳文本後選擇轉換格式，點擊 "開始轉換" 按鈕即可查看編碼與下載結果。
+            </p>
         </div>
     </div>
 

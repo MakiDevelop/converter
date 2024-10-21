@@ -81,3 +81,17 @@ footer {
     display: block;  /* 保持每個項目是區塊顯示 */
     width: 100%;  /* 每個項目佔滿整列 */
 }
+
+.tool-description {
+    background-color: #f8f9fa; /* 淺色背景 */
+    border-top: 1px solid #dee2e6; /* 分隔線 */
+    padding: 20px 0;
+}
+
+.tool-description h5 {
+    font-weight: bold;
+}
+
+.tool-description p {
+    margin-bottom: 10px;
+}

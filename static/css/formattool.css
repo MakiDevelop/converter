@@ -1,0 +1,10 @@
+.tool-section {
+    margin-top: 20px;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    font-family: monospace;
+}
