@@ -24,6 +24,7 @@ import xmltodict
 import re
 import difflib
 from PyPDF2 import PdfMerger, PdfReader, PdfWriter
+import requests
 
 app = FastAPI()
 
@@ -48,32 +49,32 @@ async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-# 处理根目录的 robots.txt 文件
+# 處理根目錄的 robots.txt 文件
 @app.get("/robots.txt")
 async def robots():
     file_path = os.path.join(
         os.getcwd(), "robots.txt"
-    )  # 确认路径指向项目根目录的 robots.txt
+    )  # 確認路徑指向專案根目錄的 robots.txt
     return FileResponse(file_path)
 
 
-# 处理根目录的 ads.txt 文件
+# 處理根目錄的 ads.txt 文件
 @app.get("/ads.txt")
 async def ads():
-    file_path = os.path.join(os.getcwd(), "ads.txt")  # 确认路径指向项目根目录的 ads.txt
+    file_path = os.path.join(os.getcwd(), "ads.txt")  # 確認路徑指向專案根目錄的 ads.txt
     return FileResponse(file_path)
 
 
-# 处理根目录的 favicon.ico 文件
+# 處理根目錄的 favicon.ico 文件
 @app.get("/favicon.ico")
 async def favicon():
     file_path = os.path.join(
         os.getcwd(), "favicon.ico"
-    )  # 确认路径指向项目根目录的 favicon.ico
+    )  # 確認路徑指向專案根目錄的 favicon.ico
     return FileResponse(file_path)
 
 
-# 示例管理页面路由
+# 管理頁面路由
 @app.get("/admin")
 async def admin_page(request: Request):
     return templates.TemplateResponse("admin.html", {"request": request})
@@ -178,73 +179,117 @@ async def js_format(request: Request):
 async def md2html(request: Request):
     return templates.TemplateResponse("md2html.html", {"request": request})
 
+
 @app.get("/csv2json", response_class=HTMLResponse)
 async def csv2json(request: Request):
     return templates.TemplateResponse("csv2json.html", {"request": request})
+
 
 @app.get("/xml2json", response_class=HTMLResponse)
 async def xml2json(request: Request):
     return templates.TemplateResponse("xml2json.html", {"request": request})
 
+
 @app.get("/regexf2e", response_class=HTMLResponse)
 async def regex_f2e(request: Request):
     return templates.TemplateResponse("regexf2e.html", {"request": request})
+
 
 @app.get("/comparetexts", response_class=HTMLResponse)
 async def comparetexts(request: Request):
     return templates.TemplateResponse("compare_texts.html", {"request": request})
 
+
 @app.get("/convertimage", response_class=HTMLResponse)
 async def convertimage(request: Request):
     return templates.TemplateResponse("convert_image.html", {"request": request})
 
+
 @app.get("/formatjson", response_class=HTMLResponse)
 async def formatjson(request: Request):
     return templates.TemplateResponse("formatjson.html", {"request": request})
+
 
 @app.get("/pdfmergesplit", response_class=HTMLResponse)
 async def pdfmergesplit(request: Request):
     return templates.TemplateResponse("pdfmergesplit.html", {"request": request})
 
 
-# 创建保存生成 PDF 文件的目录
+@app.get("/nerdextract", response_class=HTMLResponse)
+async def nerdextract(request: Request):
+    return templates.TemplateResponse("nerd_extract.html", {"request": request})
+
+
+@app.post("/api/extract_keywords")
+async def extract_keywords(request: Request):
+    data = await request.json()
+    text = data.get("text")
+    
+    # 调用关键词提取 API 并传递 content 和 site_list
+    api_response = requests.post(
+        "https://nerdpoc.pixnet.cc/fastapi/api/extract_tags_by_list",
+        json={
+            "content": [text],
+            "site_list": ["pixnet", "pixnet_extract", "mombaby", "mombaby_extract", "techbang", "techbang_extract"]
+        }
+    )
+    
+    # 解析 API 响应数据
+    response_data = api_response.json().get("data", [])
+    keywords = []
+
+    # 提取关键词
+    if response_data:
+        keywords = list(response_data[0].keys())  # 获取关键词的key列表
+
+    # 打印返回的数据以供调试
+    print({"keywords": keywords})
+
+    return {"keywords": keywords}
+
+
+# 建立保存生成 PDF 文件的目錄
 os.makedirs("processed_pdfs", exist_ok=True)
 
-# 创建保存生成 PDF 文件的目录
+# 建立保存生成 PDF 文件的目錄
 os.makedirs("processed_pdfs", exist_ok=True)
 
-# PDF 合并
+
+# PDF 合並
 @app.post("/merge_pdfs")
 async def merge_pdfs(files: list[UploadFile] = File(...)):
     merger = PdfMerger()
     try:
-        # 将每个上传的 PDF 文件合并
+        # 將每個上傳的 PDF 文件合併
         for file in files:
             merger.append(file.file)
-        
+
         output_filename = "processed_pdfs/merged.pdf"
         with open(output_filename, "wb") as f_out:
             merger.write(f_out)
 
-        # 返回合并后的 PDF 文件
+        # 回傳合併後的 PDF 文件
         return FileResponse(output_filename, media_type="application/pdf")
     except Exception as e:
         return {"error": f"PDF merge failed: {str(e)}"}
 
+
 # PDF 分割
 @app.post("/split_pdf")
-async def split_pdf(file: UploadFile = File(...), start_page: int = Form(...), end_page: int = Form(...)):
+async def split_pdf(
+    file: UploadFile = File(...), start_page: int = Form(...), end_page: int = Form(...)
+):
     try:
-        # 读取上传的 PDF 文件
+        # 讀取上傳的 PDF 文件
         pdf_reader = PdfReader(file.file)
         pdf_writer = PdfWriter()
 
-        # 验证页码范围
+        # 驗證頁碼範圍
         total_pages = len(pdf_reader.pages)
         if start_page < 1 or end_page > total_pages or start_page > end_page:
             return {"error": "Invalid page range."}
 
-        # 分割指定范围的页面
+        # 分割指定範圍的页面
         for page_num in range(start_page - 1, end_page):
             pdf_writer.add_page(pdf_reader.pages[page_num])
 
@@ -252,75 +297,84 @@ async def split_pdf(file: UploadFile = File(...), start_page: int = Form(...), e
         with open(output_filename, "wb") as f_out:
             pdf_writer.write(f_out)
 
-        # 返回分割后的 PDF 文件
+        # 回傳分割後的 PDF 文件
         return FileResponse(output_filename, media_type="application/pdf")
     except Exception as e:
         return {"error": f"PDF split failed: {str(e)}"}
 
-# JSON 结构格式化/美化工具
+
+# JSON 結構格式化/美化工具
 @app.post("/format_json")
 async def format_json(content: str = Form(...), action: str = Form(...)):
     try:
-        # 解析 JSON 数据
+        # 解析 JSON 數據
         json_data = json.loads(content)
-        
-        # 如果用户选择格式化（美化），使用 indent 参数
+
+        # 如果用戶選擇格式化（美化），使用 indent 參數
         if action == "pretty":
             formatted_json = json.dumps(json_data, indent=4, ensure_ascii=False)
-        # 如果用户选择压缩，去掉所有缩进
+        # 如果用戶選擇壓縮，去掉所有縮排
         elif action == "compact":
-            formatted_json = json.dumps(json_data, separators=(',', ':'), ensure_ascii=False)
+            formatted_json = json.dumps(
+                json_data, separators=(",", ":"), ensure_ascii=False
+            )
         else:
             return {"error": "Invalid action. Choose 'pretty' or 'compact'."}
-        
+
         return JSONResponse(content={"formatted_json": formatted_json})
     except json.JSONDecodeError as e:
         return {"error": f"Invalid JSON format: {str(e)}"}
 
-# 创建保存转换后图片的目录
+
+# 建立保存轉換後圖片的目录
 os.makedirs("converted_images", exist_ok=True)
 
-# 图片格式转换
+
+# 圖片格式轉換
 @app.post("/convert_image")
-async def convert_image(
-    file: UploadFile = File(...), target_format: str = Form(...)):
+async def convert_image(file: UploadFile = File(...), target_format: str = Form(...)):
     try:
-        # 打开上传的图片
+        # 開啟上傳的圖片
         image = Image.open(file.file)
-        
-        # 如果目标格式是 WebP，处理透明度问题并强制转换为标准模式
+
+        # 如果目标格式是 WebP，處理透明度问题並强制轉換为标准模式
         if target_format.lower() == "webp":
-            if features.check('webp'):
-                # 强制转换为 RGBA 或 RGB 模式以避免兼容性问题
+            if features.check("webp"):
+                # 强制轉換为 RGBA 或 RGB 模式以避免兼容性问题
                 if image.mode in ("RGBA", "LA", "P"):
                     image = image.convert("RGBA")
                 output_filename = "converted_images/converted_image.webp"
                 image.save(output_filename, format="WEBP", lossless=True)
             else:
-                return {"error": "WebP format is not supported by the current environment."}
-        
-        # 如果目标格式是 BMP，不支持透明度，将其转换为 RGB 模式
+                return {
+                    "error": "WebP format is not supported by the current environment."
+                }
+
+        # 如果目标格式是 BMP，不支持透明度，将其轉換为 RGB 模式
         elif target_format.lower() == "bmp":
             if image.mode in ("RGBA", "LA", "P"):
                 image = image.convert("RGB")
             output_filename = "converted_images/converted_image.bmp"
             image.save(output_filename, format="BMP")
-        
-        # 处理 JPEG、PNG、GIF 格式
+
+        # 處理 JPEG、PNG、GIF 格式
         else:
             target_format = target_format.lower()
             if target_format not in ["jpeg", "png", "gif"]:
-                return {"error": "Unsupported format. Please use JPEG, PNG, GIF, WebP, or BMP."}
+                return {
+                    "error": "Unsupported format. Please use JPEG, PNG, GIF, WebP, or BMP."
+                }
             output_filename = f"converted_images/converted_image.{target_format}"
             image.save(output_filename, format=target_format.upper())
-        
-        # 返回转换后的图片文件
+
+        # 回傳轉換後的圖片文件
         return FileResponse(output_filename, media_type=f"image/{target_format}")
-    
+
     except Exception as e:
-        # 捕获异常并输出详细的错误信息
+        # 捕获异常並輸出详细的错误信息
         error_message = f"Image conversion failed: {str(e)}\n{traceback.format_exc()}"
         return {"error": error_message}
+
 
 # 文本对比
 @app.post("/compare_texts")
@@ -330,19 +384,20 @@ async def compare_texts(text1: str = Form(...), text2: str = Form(...)):
         diff = difflib.ndiff(text1.splitlines(), text2.splitlines())
         diff_output = []
         for line in diff:
-            if line.startswith('-'):
+            if line.startswith("-"):
                 # 红色表示被删除的行
                 diff_output.append(f'<span style="color: red;">{line}</span>')
-            elif line.startswith('+'):
+            elif line.startswith("+"):
                 # 绿色表示被添加的行
                 diff_output.append(f'<span style="color: green;">{line}</span>')
             else:
                 # 原样显示相同的行
                 diff_output.append(line)
-        # 使用 HTML 格式返回
+        # 使用 HTML 格式回傳
         return JSONResponse(content={"diff": "\n".join(diff_output)})
     except Exception as e:
         return JSONResponse(content={"error": f"An error occurred: {str(e)}"})
+
 
 # 正则表达式匹配测试
 @app.post("/regex")
@@ -359,35 +414,38 @@ async def regex(pattern: str = Form(...), text: str = Form(...)):
     except re.error as e:
         return JSONResponse(content={"error": f"Invalid regular expression: {str(e)}"})
 
-# XML 转 JSON
+
+# XML 轉 JSON
 @app.post("/xml2json")
 async def xml_to_json(content: str = Form(...)):
     try:
-        # 直接返回字典，FastAPI 会自动处理 JSON 格式
+        # 直接回傳字典，FastAPI 会自动處理 JSON 格式
         return xmltodict.parse(content)
     except Exception as e:
         return {"error": f"Invalid XML format: {str(e)}"}
 
-# JSON 转 XML
+
+# JSON 轉 XML
 @app.post("/json2xml")
 async def json_to_xml(content: str = Form(...)):
     try:
-        # 将 JSON 转换为字典格式
+        # 将 JSON 轉換为字典格式
         json_data = json.loads(content)
-        # 将字典转换为 XML 字符串
+        # 将字典轉換为 XML 字符串
         xml_output = xmltodict.unparse(json_data, pretty=True)
         return HTMLResponse(content=xml_output, media_type="application/xml")
     except Exception as e:
         return {"error": f"Invalid JSON format: {str(e)}"}
 
-# Markdown 转 HTML
+
+# Markdown 轉 HTML
 @app.post("/md2html", response_class=HTMLResponse)
 async def markdown_to_html(content: str = Form(...)):
     html_content = markdown.markdown(content)
     return f"<div>{html_content}</div>"
 
 
-# HTML 转 Markdown
+# HTML 轉 Markdown
 @app.post("/html2md", response_class=HTMLResponse)
 async def html_to_markdown(content: str = Form(...)):
     text_maker = html2text.HTML2Text()
@@ -396,7 +454,7 @@ async def html_to_markdown(content: str = Form(...)):
     return f"<pre>{markdown_content}</pre>"
 
 
-# CSV 转 JSON
+# CSV 轉 JSON
 @app.post("/csv2json")
 async def csv_to_json(file: UploadFile = File(...)):
     content = await file.read()
@@ -407,20 +465,20 @@ async def csv_to_json(file: UploadFile = File(...)):
     return JSONResponse(content=json_output)
 
 
-# JSON 转 CSV
+# JSON 轉 CSV
 @app.post("/json2csv")
 async def json_to_csv(content: str = Form(...)):
     json_data = json.loads(content)
 
-    # 提取 CSV 的字段名
+    # 取出 CSV 的字段名
     if isinstance(json_data, list) and len(json_data) > 0:
         keys = json_data[0].keys()
     else:
         return {"error": "Invalid JSON format"}
 
-    # 创建 CSV
+    # 建立 CSV
     output = []
-    output.append(",".join(keys))  # CSV 头部
+    output.append(",".join(keys))  # CSV 欄位名稱
 
     for entry in json_data:
         row = [str(entry[key]) for key in keys]
@@ -465,7 +523,7 @@ async def upload_and_convert(
         # 使用目標編碼重新編碼文件內容
         converted_content = decoded_content.encode(target_encoding)
 
-        # 返回轉換後的內容進行預覽
+        # 回傳轉換後的內容進行預覽
         utf8_preview = converted_content.decode(target_encoding)
 
         # 保存文件以便下載
@@ -491,7 +549,7 @@ async def upload_and_convert(
     except UnicodeEncodeError as encode_error:
         return JSONResponse(
             {
-                "error": f"无法将文件转换为 {target_encoding}, 错误信息: {str(encode_error)}"
+                "error": f"无法将文件轉換为 {target_encoding}, 错误信息: {str(encode_error)}"
             },
             status_code=500,
         )
@@ -532,7 +590,7 @@ async def image_to_base64(file: UploadFile = File(...)):
 
         return JSONResponse({"base64": encoded_string})
     except Exception as e:
-        return JSONResponse({"error": f"文件转换失败: {str(e)}"}, status_code=500)
+        return JSONResponse({"error": f"文件轉換失败: {str(e)}"}, status_code=500)
 
 
 # Base64 轉換爲圖片
@@ -549,16 +607,16 @@ async def base64_to_image(base64_string: str = Form(...)):
 
         return JSONResponse({"converted_file": output_filename})
     except Exception as e:
-        return JSONResponse({"error": f"Base64 转图片失败: {str(e)}"}, status_code=500)
+        return JSONResponse({"error": f"Base64 轉圖片失败: {str(e)}"}, status_code=500)
 
 
 @app.get("/", response_class=HTMLResponse)
 async def get_image_converter():
-    html_path = Path("templates/converter.html")  # 你的HTML文件路径
+    html_path = Path("templates/converter.html")  # 你的HTML文件路徑
     return HTMLResponse(content=html_path.read_text(), status_code=200)
 
 
-# 图片格式转换
+# 圖片格式轉換
 @app.post("/imageformatconvert/")
 async def convert_image(
     file: UploadFile = File(...),
@@ -566,32 +624,32 @@ async def convert_image(
     quality: int = Form(80),
     lossless: bool = Form(False),
 ):
-    # 检查文件大小
+    # 檢查文件大小
     file_content = await file.read()
     if len(file_content) > MAX_UPLOAD_SIZE:
         raise HTTPException(
             status_code=413, detail="File size exceeds the limit of 50MB"
         )
 
-    # 保存临时上传的文件
+    # 保存臨時上傳的文件
     temp_file_path = Path(f"temp_{file.filename}")
     with open(temp_file_path, "wb") as buffer:
-        buffer.write(file_content)  # 写入文件内容
+        buffer.write(file_content)  # 寫入文件内容
 
-    # 调用图片转换函数
+    # 呼叫圖片轉換函數
     output_path = convert_image_to_format(
         str(temp_file_path), format, quality, lossless
     )
 
-    # 读取转换后的文件内容
+    # 讀取轉換後的文件内容
     with open(output_path, "rb") as output_file:
         converted_image = output_file.read()
 
-    # 删除临时文件
+    # 删除臨時文件
     temp_file_path.unlink()
     Path(output_path).unlink()
 
-    # 返回图片的二进制流
+    # 回傳圖片的二進制串流
     return StreamingResponse(io.BytesIO(converted_image), media_type=f"image/{format}")
 
 
@@ -626,13 +684,13 @@ def convert_image_to_format(
             f"Unsupported format: {output_format}. Please choose from {valid_formats}."
         )
 
-    # 打开图像
+    # 開啟圖片
     img = Image.open(input_path)
 
-    # 生成输出文件路径
+    # 生成輸出文件路徑
     output_path = os.path.splitext(input_path)[0] + f".{output_format}"
 
-    # 转换并保存图像
+    # 轉換並保存圖片
     img.save(
         output_path, format=output_format.upper(), quality=quality, lossless=lossless
     )
