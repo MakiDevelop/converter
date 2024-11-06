@@ -219,6 +219,9 @@ async def pdfmergesplit(request: Request):
 async def nerdextract(request: Request):
     return templates.TemplateResponse("nerd_extract.html", {"request": request})
 
+@app.get("/screeninfo", response_class=HTMLResponse)
+async def screeninfo(request: Request):
+    return templates.TemplateResponse("screen.html", {"request": request})
 
 @app.post("/api/extract_keywords")
 async def extract_keywords(request: Request):
