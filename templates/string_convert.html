@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <title>字符串处理工具 - 0rz.tw工具箱</title>
@@ -7,28 +8,36 @@
     <!-- 引入自動廣告JS -->
     <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1727974428384292"
     crossorigin="anonymous"></script> -->
-    
+
     <style>
         body {
             font-family: Arial, sans-serif;
         }
+
         .container {
             margin: 20px;
         }
+
         .section {
             margin-bottom: 40px;
             padding: 10px;
             border: 1px solid #ccc;
         }
+
         h2 {
             color: #333;
         }
+
         textarea {
             width: 100%;
             height: 100px;
         }
     </style>
+    <!-- 引入自動廣告JS -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1727974428384292"
+        crossorigin="anonymous"></script>
 </head>
+
 <body>
     <div class="container">
         <h1>字符串处理工具</h1>
@@ -129,7 +138,7 @@
         // HTML 实体编码与解码
         function encodeHtmlEntities() {
             const input = document.getElementById('html-input').value;
-            const encoded = input.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
+            const encoded = input.replace(/[\u00A0-\u9999<>\&]/gim, function (i) {
                 return '&#' + i.charCodeAt(0) + ';';
             });
             document.getElementById('html-output').innerText = encoded;
@@ -143,4 +152,5 @@
         }
     </script>
 </body>
+
 </html>

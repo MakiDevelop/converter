@@ -1,2 +1,8 @@
 google.com, pub-3975082217896454, DIRECT, f08c47fec0942fa0
 google.com, pub-1727974428384292, DIRECT, f08c47fec0942fa0
+
+#pixnet_google_202308
+google.com, pub-6865528665029394, DIRECT, f08c47fec0942fa0
+google.com, pub-8081052438177242, DIRECT, f08c47fec0942fa0
+google.com, pub-2647689032095179, DIRECT, f08c47fec0942fa0
+google.com, pub-1727974428384292, DIRECT, f08c47fec0942fa0

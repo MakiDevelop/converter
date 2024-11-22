@@ -60,6 +60,9 @@
             width: 100%;
         }
     </style>
+    <!-- 引入自動廣告JS -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1727974428384292"
+        crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -67,13 +70,12 @@
     <div id="header"></div>
 
     <!-- 廣告版位 -->
-    <div class="ad-space">
-        <!-- <img src="https://via.placeholder.com/970x250" alt="廣告版位 970x250"> -->
+    <!-- <div class="ad-space">
         <div id="pixad3292adx"></div>
         <ins class="adsbyfalcon" data-ad-client="1" data-ad-slot="5499"
             style="display:inline-block;width:970px;height:250px"></ins>
         <script async src="https://falcon-asset.pixfs.net/js/adsbyfalcon.min.js"></script>
-    </div>
+    </div> -->
 
     <!-- 主內容 -->
     <div class="container mt-5">
@@ -85,7 +87,7 @@
             <input type="file" id="mergeFiles" name="files" multiple accept="application/pdf">
             <button type="button" onclick="mergePdfs()">合併 PDF</button>
         </form>
-        
+
         <h2>分割 PDF（分割出指定頁碼區間）</h2>
         <form id="splitForm" enctype="multipart/form-data">
             <input type="file" id="splitFile" name="file" accept="application/pdf">
@@ -153,7 +155,7 @@
     </div>
 
     <!-- 廣告版位 -->
-    <div class="ad-space">
+    <!-- <div class="ad-space">
         <div id="pixad3292adx"></div>
         <ins class="adsbygoogle" style="display:inline-block;width:970px;height:250px" data-ad-region="falcon"
             data-ad-client="ca-pub-6865528665029394" data-ad-slot="pixnet_pc_idle_970x250_adx_pb"></ins>
@@ -163,7 +165,7 @@
             jQuery.getScript("//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js");
             jQuery.ajaxSetup({ 'cache': false });
         </script>
-    </div>
+    </div> -->
 
     <!-- Modal: 通用提示框 -->
     <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel"
