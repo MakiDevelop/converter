@@ -7,9 +7,8 @@ services:
     networks:
       - shared-network
     volumes:
-      - ./static:/app/static  # 将宿主机的 static 目录挂载到容器中的 /app/static
-      - ./templates:/app/templates  # 同样挂载 templates 目录
-    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--log-level", "error"]
+      - .:/app  # 掛載整個專案目錄
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--reload-dir", "/app", "--log-level", "error"]
 
 networks:
   shared-network:

@@ -52,7 +52,7 @@ openai.api_key = OPENAI_API_KEY
 conversation_context = {}
 
 def get_chatgpt_response(prompt, previous_context=None, model="gpt-4", max_tokens=1000):
-    messages = [{"role": "system", "content": "你是一名美食部落客。"}]
+    messages = [{"role": "system", "content": "你是一名資深的且多種領域的部落客，非常擅長回答問題，且非常擅長寫作。另外你的語言能力很好，同時可以說中文、英文、日文，主要以繁體中文為主。"}]
     if previous_context:
         messages.append({"role": "assistant", "content": previous_context})
     messages.append({"role": "user", "content": prompt})
