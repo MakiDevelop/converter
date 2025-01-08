@@ -25,6 +25,7 @@ import re
 import difflib
 from PyPDF2 import PdfMerger, PdfReader, PdfWriter
 import requests
+import openai
 
 app = FastAPI()
 
@@ -41,6 +42,74 @@ templates = Jinja2Templates(directory="templates")
 
 # 掛載靜態文件路徑
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+LINE_CHANNEL_ACCESS_TOKEN = "bF71T7ODeYwy3RxRud1WmOJtsJeFOal5GFbxw4ADMSWTA7MDmNXYi17wIgI2pM8LaRumgcz1e2w2DoLofIpBxO3ClI0GBy5Z8+blJymTRpSZBebz6665JT/wwwKo0G3Xd+N8cyU4hb0xljYvFYOqUwdB04t89/1O/w1cDnyilFU="
+OPENAI_API_KEY = "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"
+openai.api_key = OPENAI_API_KEY
+
+# 全局变量，用于临时存储上下文（可以替换为数据库或缓存）
+conversation_context = {}
+
+def get_chatgpt_response(prompt, previous_context=None, model="gpt-4", max_tokens=1000):
+    messages = [{"role": "system", "content": "你是一名美食部落客。"}]
+    if previous_context:
+        messages.append({"role": "assistant", "content": previous_context})
+    messages.append({"role": "user", "content": prompt})
+    
+    try:
+        response = openai.ChatCompletion.create(
+            model=model,
+            messages=messages,
+            max_tokens=max_tokens
+        )
+        return response.choices[0].message["content"]
+    except Exception as e:
+        print(f"OpenAI API Error: {str(e)}")
+        return "抱歉，我無法處理您的請求。"
+
+def reply_to_user(reply_token, message):
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {LINE_CHANNEL_ACCESS_TOKEN}"
+    }
+    data = {
+        "replyToken": reply_token,
+        "messages": [
+            {"type": "text", "text": message}
+        ]
+    }
+    response = requests.post("https://api.line.me/v2/bot/message/reply", headers=headers, json=data)
+    print("Reply Status:", response.status_code, response.text)
+
+@app.post("/webhook")
+async def webhook(request: Request):
+    body = await request.json()
+    print("Received Webhook Data:", body)
+
+    events = body.get("events", [])
+    for event in events:
+        if event["type"] == "message" and event["message"]["type"] == "text":
+            user_id = event["source"]["userId"]
+            user_message = event["message"]["text"]
+            reply_token = event["replyToken"]
+
+            # 检查用户是否发了 "请继续" 或 "请接着写"
+            if user_message in ["請繼續", "請接著寫"]:
+                previous_response = conversation_context.get(user_id, "")
+                chatgpt_reply = get_chatgpt_response("請繼續", previous_context=previous_response)
+            else:
+                # 如果不是 "请继续"，就正常调用 ChatGPT
+                chatgpt_reply = get_chatgpt_response(user_message)
+            
+            # 更新上下文存储
+            conversation_context[user_id] = chatgpt_reply
+
+            # 通过 LINE Messaging API 回复用户
+            reply_to_user(reply_token, chatgpt_reply)
+
+    return "OK"
+
 
 
 # 根路由渲染 index.html
@@ -79,6 +148,9 @@ async def favicon():
 async def admin_page(request: Request):
     return templates.TemplateResponse("admin.html", {"request": request})
 
+@app.get("/srt2vttconverter")
+async def srt2vtt_converter(request: Request):
+    return templates.TemplateResponse("srt2vtt_converter.html", {"request": request})
 
 @app.get("/ndjson2json")
 async def ndjson_to_json(request: Request):
@@ -222,6 +294,79 @@ async def nerdextract(request: Request):
 @app.get("/screeninfo", response_class=HTMLResponse)
 async def screeninfo(request: Request):
     return templates.TemplateResponse("screen.html", {"request": request})
+
+@app.get("/whatsmyip")
+async def get_ip(request: Request):
+    # 从请求头中获取 X-Forwarded-For
+    forwarded_for = request.headers.get("X-Forwarded-For")
+    user_agent = request.headers.get("user-agent")
+    if forwarded_for:
+        # 提取第一个 IP（逗号分隔）
+        client_ip = forwarded_for.split(",")[0].strip()
+    else:
+        # 如果没有 X-Forwarded-For，则退回到 request.client.host
+        client_ip = request.client.host
+    
+    return templates.TemplateResponse("whatsmyip.html", {"request": request, "ip": client_ip, "user_agent": user_agent})
+
+# 字幕轉換start
+def vtt_to_srt(content: str) -> str:
+    """Convert VTT to SRT format."""
+    lines = content.splitlines()
+    srt_lines = []
+    counter = 1
+
+    for line in lines:
+        if "-->" in line:
+            # Add counter for SRT
+            srt_lines.append(str(counter))
+            counter += 1
+            # Replace VTT time format with SRT format
+            srt_lines.append(line.replace(".", ","))
+        elif line.strip() and line != "WEBVTT":
+            srt_lines.append(line)
+        elif not line.strip():
+            srt_lines.append("")
+    return "\n".join(srt_lines)
+
+def srt_to_vtt(content: str) -> str:
+    """Convert SRT to VTT format."""
+    lines = content.splitlines()
+    vtt_lines = ["WEBVTT", ""]
+    
+    for line in lines:
+        if re.match(r"^\d+$", line):  # Ignore SRT numbering
+            continue
+        elif "-->" in line:
+            # Replace SRT time format with VTT format
+            vtt_lines.append(line.replace(",", "."))
+        else:
+            vtt_lines.append(line)
+    return "\n".join(vtt_lines)
+
+@app.post("/api/convert_subtitle")
+async def convert_subtitle(file: UploadFile, target_format: str = Form(...)):
+    # Read uploaded file
+    try:
+        content = (await file.read()).decode("utf-8")
+    except UnicodeDecodeError:
+        raise HTTPException(status_code=400, detail="无法读取文件，请确保文件编码为 UTF-8")
+
+    # Check file format and perform conversion
+    if target_format == "srt" and "WEBVTT" in content:
+        converted_content = vtt_to_srt(content)
+    elif target_format == "vtt" and "WEBVTT" not in content:
+        converted_content = srt_to_vtt(content)
+    else:
+        raise HTTPException(status_code=400, detail="文件格式或目标格式无效")
+
+    # Return converted content with a preview
+    preview = "\n".join(converted_content.splitlines()[:10])
+    return JSONResponse(content={
+        "preview": preview,
+        "file_content": converted_content
+    })
+# 字幕轉換end
 
 @app.post("/api/extract_keywords")
 async def extract_keywords(request: Request):

@@ -2,18 +2,19 @@
 <html lang="zh-Hant">
 
 <head>
-    <title>重覆資料去除工具 - 0rz.tw工具箱</title>
+    <title>0rz.tw工具箱</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="快速去除重複內容的檢查工具">
-    <meta name="keywords" content="去除重複內容, 中文轉換, 0rz.tw, 工具箱">
+    <meta name="description" content="查詢當前IP">
+    <meta name="keywords" content="查詢當前IP, 格式轉換, 0rz.tw, 工具箱">
     <meta name="robots" content="index, follow">
     <meta name="author" content="0rz.tw工具箱">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="重覆資料去除工具 - 0rz.tw工具箱">
-    <meta property="og:description" content="快速去除重複內容的檢查工具">
-    <meta property="og:url" content="https://0rz.tw/dupremove">
+    <meta property="og:title" content="查詢當前IP - 0rz.tw工具箱">
+    <meta property="og:description" content="查詢當前IP">
+    <meta property="og:url" content="https://0rz.tw/whatsmyip">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="0rz.tw工具箱">
     <meta property="og:image" content="https://0rz.tw/static/images/0rz_tw.jpg">
@@ -22,48 +23,47 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="重覆資料去除工具 - 0rz.tw工具箱">
-    <meta name="twitter:description" content="快速去除重複內容的檢查工具">
+    <meta name="twitter:title" content="查詢當前IP - 0rz.tw工具箱">
+    <meta name="twitter:description" content="查詢當前IP">
     <meta name="twitter:image" content="https://0rz.tw/static/images/0rz_tw.jpg">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://0rz.tw/dupremove">
+    <link rel="canonical" href="https://0rz.tw/whatsmyip">
 
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      "name": "重覆資料去除工具 - 0rz.tw工具箱",
-      "description": "快速去除重複內容的檢查工具",
-      "url": "https://0rz.tw/dupremove",
+      "name": "查詢當前IP - 0rz.tw工具箱",
+      "description": "查詢當前IP",
+      "url": "https://0rz.tw/whatsmyip",
       "image": "https://0rz.tw/static/images/0rz_tw.jpg"
     }
-    </script>
-    <!-- 引入 Bootstrap CSS -->
+    </script> <!-- 引入 Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="static/css/style.css">
+    <!-- 引入自定義樣式 -->
+    <link rel="stylesheet" href="/static/css/style.css">
 
     <!-- 引入自動廣告JS -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1727974428384292"
-    crossorigin="anonymous"></script>
-    
+        crossorigin="anonymous"></script>
+
     <style>
         /* 为 body 设置固定的 padding-top 确保内容不会被导航栏遮挡 */
         body {
             padding-top: 60px;
-            /* 确保导航栏不会遮挡内容，60px根据实际导航栏高度调整 */
+            /* 假设导航栏的高度为60px，根据实际情况调整 */
         }
 
-        .ad-space {
-            min-height: 250px;
-            /* 确保广告位有足够空间，不会跳动 */
-            margin-bottom: 20px;
-            /* 增加广告和内容之间的间距 */
+        @media (max-width: 768px) {
+
+            #left-ad,
+            #right-ad {
+                display: none !important;
+            }
         }
     </style>
-
-    <!-- 引入 jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Google Tag Manager -->
     <script>(function (w, d, s, l, i) {
@@ -82,6 +82,52 @@
     <!-- 這裡是加載共用的 header -->
     <div id="header"></div>
 
+    <!-- 左侧广告 -->
+    <div id="left-ad" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 150px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+">
+        <script type="text/javascript">
+            google_ad_client = "ca-pub-6865528665029394";
+            /* test_0rx_pc_adsize_native_width_250_lower */
+            google_ad_slot = "test_0rx_pc_adsize_native_width_250_lower";
+            google_ad_width = 150;
+            google_ad_height = 600;
+        </script>
+        <script type="text/javascript" src="//pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+    </div>
+
+    <!-- 右侧广告 -->
+    <div id="right-ad" style="
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 250px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+">
+        <script type="text/javascript">
+            google_ad_client = "ca-pub-6865528665029394";
+            /* test_0rx_pc_adsize_native_width_250_lower */
+            google_ad_slot = "test_0rx_pc_adsize_native_width_250_equal";
+            google_ad_width = 250;
+            google_ad_height = 600;
+        </script>
+        <script type="text/javascript" src="//pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+    </div>
+
     <!-- 廣告版位 -->
     <!-- <div class="ad-space">
         <div id="pixad3292adx"></div>
@@ -91,31 +137,21 @@
     <div class="ad-space">
         <script type="text/javascript">
             google_ad_client = "ca-pub-6865528665029394";
-            /* test_0rx_pc_adsize_native_width_250_higher */
             google_ad_slot = "test_0rx_pc_adsize_native_width_250_higher";
             google_ad_width = 970;
             google_ad_height = 250;
-            </script>
-            <script type="text/javascript" src="//pagead2.googlesyndication.com/pagead/show_ads.js">
-            </script>
+        </script>
+        <script type="text/javascript" src="//pagead2.googlesyndication.com/pagead/show_ads.js"></script>
     </div>
 
     <!-- 主內容 -->
     <div class="container">
-        <div class="row">
-            <div class="col-md-5 textarea-container">
-                <h3>Input Data</h3>
-                <textarea id="duplicate-input" class="form-control" placeholder="在此貼入要去除重覆行的資料" rows="12"></textarea>
-            </div>
-
-            <div class="col-md-2 parse-btn-container">
-                <button id="check-btn" class="btn btn-primary">檢查</button>
-            </div>
-
-            <div class="col-md-5 output-container">
-                <h3>Output Data</h3>
-                <div id="output"></div>
-            </div>
+        <div class="row" style="text-align: center;">
+            <h1>您當前的IP位址: {{ ip }}</h1>
+        </div>
+        <div class="row" style="text-align: center;">
+            <h2>您的瀏覽器資訊：</h2>
+            <h2>{{ user_agent }}</h2>
         </div>
     </div>
 
@@ -162,11 +198,12 @@
         </div>
     </div>
 
+    <!-- 這裡是加載共用的 footer 上方的說明文字 -->
     <div class="tool-description bg-light text-center py-4">
         <div class="container">
-            <h5 class="text-primary">去除重複資料工具說明</h5>
+            <h5 class="text-primary">查詢當前IP 工具說明</h5>
             <p class="text-muted">
-                此工具幫助您從文本或資料中去除重複行。將資料貼入左側欄位，點擊 "檢查" 按鈕，右側將顯示去除重複後的結果。
+                此工具用於將您當前的IP位址顯示出來。
             </p>
         </div>
     </div>
@@ -174,29 +211,21 @@
     <!-- 這裡是加載共用的 footer -->
     <div id="footer"></div>
 
-    <!-- 引入 Bootstrap 的 JS -->
+    <!-- 引入 Bootstrap 的 JS 和 Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // 动态加载 header 和 footer
         fetch('/static/html/header.html')
             .then(response => response.text())
-            .then(data => {
-                document.getElementById('header').innerHTML = data;
-
-                // 确保 Bootstrap 的下拉菜单功能被初始化
-                var dropdownElements = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
-                dropdownElements.map(function (dropdownToggle) {
-                    return new bootstrap.Dropdown(dropdownToggle);
-                });
-            });
+            .then(data => document.getElementById('header').innerHTML = data);
 
         fetch('/static/html/footer.html')
             .then(response => response.text())
             .then(data => document.getElementById('footer').innerHTML = data);
     </script>
     <!-- 引入自定義 JS -->
+    <script src="static/js/whatsmyip.js"></script>
     <script src="static/js/app.js"></script>
-    <script src="static/js/duplicate_remove.js"></script>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5HFHM7MM" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>

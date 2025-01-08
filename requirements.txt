@@ -13,3 +13,4 @@ html2text
 xmltodict
 pypdf2
 requests
+openai==0.28.0
